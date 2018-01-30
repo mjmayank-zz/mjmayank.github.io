@@ -33890,7 +33890,7 @@ const Frame = __WEBPACK_IMPORTED_MODULE_1_styled_components___default.a.iframe `
 `;
 const url = 'https://www.washingtonpost.com/news/worldviews/wp/2014/12/04/watch-how-europe-is-greener-now-than-100-years-ago/?utm_term=.a93e8b920005';
 /* harmony default export */ __webpack_exports__["a"] = ((props) => (__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Container, null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Frame, { src: `./iframe.html?url=${url}`, frameBorder: "0" }))));
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Frame, { src: `./build/iframe.html?url=${url}`, frameBorder: "0" }))));
 
 
 /***/ }),
