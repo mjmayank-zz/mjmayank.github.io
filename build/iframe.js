@@ -40978,7 +40978,7 @@ class SubredditSelector extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"]
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SnooLink, { href: "https://www.reddit.com", target: "_blank" },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Snoo, { src: "https://is2-ssl.mzstatic.com/image/thumb/Purple49/v4/26/4f/aa/264faa2a-bf86-0363-f7cf-eaec6c396cfd/source/512x512bb.jpg" }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h1", null, "Reddit Comments"))),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Inline, null,
+            false && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(Inline, null,
                 visiblePosts.map(sub => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SubredditName, { key: sub.data.id, active: sub.data.id === active, subredditName: sub.data.subreddit_name_prefixed, numComments: sub.data.num_comments, onClick: () => subredditChanged(sub.data.id) })),
                 !this.state.expanded && posts.length > NUM_SUBREDDITS &&
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(SeeMore, { onClick: () => this.setState({ expanded: true }) }, `+${posts.length - NUM_SUBREDDITS}`))));
