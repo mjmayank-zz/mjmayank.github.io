@@ -1,0 +1,43 @@
+{
+  "name": "Reddit Everywhere",
+  "manifest_version": 2,
+  "description": "Automatically pulls the comments in if the website you are currently browsing has been posted to reddit",
+  "version": "0.6.5",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_icon": "img/reddit.png",
+    "default_title": "Reddit Everywhere",
+    "default_popup": "popover.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": [
+        "*://*.reddit.com/*",
+        "*://*.google.com/*",
+        "*://*.messenger.com/*",
+        "*://*.facebook.com/*",
+        "*://*.instagram.com/*",
+        "*://*.yahoo.com/",
+        "*://*.snooguts.net/*",
+        "*://*.twitter.com/",
+        "*://localhost/*"
+      ],
+      "js": ["inject.js"]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "icons": {
+    "16": "img/reddit16.png",
+    "48": "img/reddit48.png",
+    "128": "img/reddit128.png"
+  },
+  "web_accessible_resources": [
+    "iframe.html"
+  ]
+}
