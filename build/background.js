@@ -553,71 +553,32 @@ exports.compose = _compose2.default;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 39 */,
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _Symbol = __webpack_require__(61),
-    getRawTag = __webpack_require__(144),
-    objectToString = __webpack_require__(148);
-
-/** `Object#toString` result references. */
-var nullTag = '[object Null]',
-    undefinedTag = '[object Undefined]';
-
-/** Built-in value references. */
-var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
-
-/**
- * The base implementation of `getTag` without fallbacks for buggy environments.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-function baseGetTag(value) {
-    if (value == null) {
-        return value === undefined ? undefinedTag : nullTag;
-    }
-    return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-}
-
-module.exports = baseGetTag;
-
-/***/ }),
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 const STORE_NAME = "REDDIT_EVERYWHERE";
-/* harmony export (immutable) */ __webpack_exports__["c"] = STORE_NAME;
+/* harmony export (immutable) */ __webpack_exports__["d"] = STORE_NAME;
 
 const COMPLETE = "complete";
-/* harmony export (immutable) */ __webpack_exports__["g"] = COMPLETE;
+/* harmony export (immutable) */ __webpack_exports__["h"] = COMPLETE;
  // Based on chrome spec. Don't change!
 const URL_UPDATED_EVENT = "EVENT__URL_UPDATED";
-/* harmony export (immutable) */ __webpack_exports__["h"] = URL_UPDATED_EVENT;
+/* harmony export (immutable) */ __webpack_exports__["i"] = URL_UPDATED_EVENT;
+
+const BAD_WORDS = [
+    'fuck',
+    'shit',
+    'damn',
+    'bitch',
+    'ass',
+    'crap',
+    'piss',
+    'dick',
+    'cock',
+    'pussy',
+];
+/* harmony export (immutable) */ __webpack_exports__["c"] = BAD_WORDS;
 
 const NODE_ACTIONS = {
     AFTER: 'after',
@@ -626,7 +587,7 @@ const NODE_ACTIONS = {
     INSERT: 'insert',
     REPLACE: 'replace',
 };
-/* harmony export (immutable) */ __webpack_exports__["d"] = NODE_ACTIONS;
+/* harmony export (immutable) */ __webpack_exports__["e"] = NODE_ACTIONS;
 
 // Specific rules for popular websites
 const PAGE_LOCATIONS = {
@@ -671,7 +632,7 @@ const PAGE_LOCATIONS = {
         type: NODE_ACTIONS.BEFORE,
     }
 };
-/* harmony export (immutable) */ __webpack_exports__["e"] = PAGE_LOCATIONS;
+/* harmony export (immutable) */ __webpack_exports__["f"] = PAGE_LOCATIONS;
 
 // what to try if the domain isn't in our specific list
 const DEFAULT_LOCATIONS = [
@@ -696,7 +657,7 @@ const DEFAULT_LOCATIONS = [
         type: NODE_ACTIONS.BEFORE,
     },
 ];
-/* harmony export (immutable) */ __webpack_exports__["f"] = DEFAULT_LOCATIONS;
+/* harmony export (immutable) */ __webpack_exports__["g"] = DEFAULT_LOCATIONS;
 
 const results_data = {
     "kind": "Listing",
@@ -5025,6 +4986,59 @@ const listing_data = [
 
 
 /***/ }),
+/* 40 */,
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Symbol = __webpack_require__(61),
+    getRawTag = __webpack_require__(144),
+    objectToString = __webpack_require__(148);
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+    if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+    }
+    return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+}
+
+module.exports = baseGetTag;
+
+/***/ }),
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5725,7 +5739,7 @@ module.exports = freeGlobal;
 "use strict";
 
 
-var baseGetTag = __webpack_require__(40),
+var baseGetTag = __webpack_require__(41),
     isObject = __webpack_require__(37);
 
 /** `Object#toString` result references. */
@@ -7172,7 +7186,7 @@ module.exports = assignValue;
 "use strict";
 
 
-var baseGetTag = __webpack_require__(40),
+var baseGetTag = __webpack_require__(41),
     isObjectLike = __webpack_require__(63);
 
 /** `Object#toString` result references. */
@@ -7198,7 +7212,7 @@ module.exports = baseIsArguments;
 "use strict";
 
 
-var baseGetTag = __webpack_require__(40),
+var baseGetTag = __webpack_require__(41),
     isLength = __webpack_require__(153),
     isObjectLike = __webpack_require__(63);
 
@@ -8650,7 +8664,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__actions__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__background_reducers__ = __webpack_require__(338);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__background_reducers___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__background_reducers__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants__ = __webpack_require__(39);
 
 
 
@@ -8660,19 +8674,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 console.log('Background.html starting!');
 /*Put page action icon on all tabs*/
 const store = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_redux__["createStore"])(__WEBPACK_IMPORTED_MODULE_4__background_reducers___default.a, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_redux__["applyMiddleware"])(__WEBPACK_IMPORTED_MODULE_2_redux_thunk___default.a)); // a normal Redux store
-__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__["wrapStore"])(store, { portName: __WEBPACK_IMPORTED_MODULE_5__constants__["c" /* STORE_NAME */] }); // make sure portName matches
+__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__["wrapStore"])(store, { portName: __WEBPACK_IMPORTED_MODULE_5__constants__["d" /* STORE_NAME */] }); // make sure portName matches
 // read user settings from local storage
 chrome.storage.sync.get(null, object => {
     store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions__["setBlacklist"])(object));
 });
 // update on URL update
 chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
-    if (change && change.status === __WEBPACK_IMPORTED_MODULE_5__constants__["g" /* COMPLETE */]) {
+    if (change && change.status === __WEBPACK_IMPORTED_MODULE_5__constants__["h" /* COMPLETE */]) {
         store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions__["setTabURL"])(tabId, tab.url));
         getPosts(tab);
         chrome.tabs.sendMessage(tabId, {
             data: tab,
-            name: __WEBPACK_IMPORTED_MODULE_5__constants__["h" /* URL_UPDATED_EVENT */],
+            name: __WEBPACK_IMPORTED_MODULE_5__constants__["i" /* URL_UPDATED_EVENT */],
         }, null);
     }
 });
