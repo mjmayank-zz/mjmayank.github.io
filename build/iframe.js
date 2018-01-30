@@ -39339,6 +39339,7 @@ const AppWrapper = __WEBPACK_IMPORTED_MODULE_2_styled_components___default.a.div
   display: flex;
   font-size: 14px;
   max-height: 675px;
+  max-width: 800px;
   margin: 4px;
   position: relative;
   z-index: 1;
