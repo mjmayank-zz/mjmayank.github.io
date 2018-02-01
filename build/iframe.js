@@ -39352,6 +39352,7 @@ const AppWrapper = __WEBPACK_IMPORTED_MODULE_2_styled_components___default.a.div
   color: ${props => props.theme.text.primary};
   display: flex;
   font-size: 14px;
+  height: 675px;
   max-height: 675px;
   max-width: 800px;
   margin: 4px;
