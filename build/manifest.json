@@ -2,7 +2,7 @@
   "name": "Reddit Everywhere",
   "manifest_version": 2,
   "description": "Automatically pulls the comments in if the website you are currently browsing has been posted to reddit",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "background": {
     "scripts": ["background.js"]
   },

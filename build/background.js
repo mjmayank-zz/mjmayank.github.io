@@ -63,11 +63,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 359);
+/******/ 	return __webpack_require__(__webpack_require__.s = 484);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -260,5114 +261,8 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var FETCH_URL = exports.FETCH_URL = "FETCH_URL";
-var FETCH_COMMENTS = exports.FETCH_COMMENTS = "FETCH_COMMENTS";
-var SET_TAB_URL = exports.SET_TAB_URL = "SET_TAB_URL";
-var SUBREDDIT_SELECTED = exports.SUBREDDIT_SELECTED = "SUBREDDIT_SELECTED";
-var COMMENT_COLLAPSED = exports.COMMENT_COLLAPSED = "COMMENT_COLLAPSED";
-var FOUND_NODE = exports.FOUND_NODE = "FOUND_NODE";
-var SET_BLACKLIST = exports.SET_BLACKLIST = "SET_BLACKLIST";
-var CHANGE_BLACKLIST = exports.CHANGE_BLACKLIST = "CHANGE_BLACKLIST";
-
-var APP_NAME = 'reddit-everywhere';
-
-// TODO: Move these into a file/export from somewhere
-var SUBREDDIT_WHITELIST = ['politics', 'news', 'worldnews'];
-
-var fetchComments = exports.fetchComments = function fetchComments(permalink) {
-  return function (dispatch, getState) {
-    var request_url = "https://reddit.com" + permalink + ".json?app=" + APP_NAME + "&raw_json=1";
-    fetch(request_url).then(function (response) {
-      return response.json();
-    }).then(function (body) {
-      dispatch({
-        type: FETCH_COMMENTS,
-        payload: body
-      });
-    });
-  };
-};
-
-var fetchURL = exports.fetchURL = function fetchURL(url) {
-  return function (dispatch, getState) {
-    fetch("https://reddit.com/api/info/.json?url=" + url + "&app=" + APP_NAME).then(function (response) {
-      return response.json();
-    }).then(function (body) {
-      var posts = body.data.children;
-      var whiteListedPosts = posts.filter(function (post) {
-        return (
-          // SUBREDDIT_WHITELIST.indexOf(post.data.subreddit) > -1
-          true
-        );
-      } // NOTE: put the whitelist back in when it's a real thing
-      );
-      dispatch({ type: FETCH_URL, payload: whiteListedPosts, meta: url });
-      if (whiteListedPosts.length > 0) {
-        dispatch(fetchComments(whiteListedPosts[0].data.permalink));
-      }
-    }).catch(function (error) {
-      return dispatch({ type: "REQUEST_FAILED", error: error });
-    });
-  };
-};
-
-var setTabURL = exports.setTabURL = function setTabURL(tabId, url) {
-  return {
-    type: SET_TAB_URL,
-    payload: {
-      tabId: tabId,
-      url: url
-    }
-  };
-};
-
-var subredditChanged = exports.subredditChanged = function subredditChanged(postId) {
-  return function (dispatch, getState) {
-    dispatch({
-      type: SUBREDDIT_SELECTED,
-      payload: postId
-    });
-
-    var state = getState();
-
-    if (!(postId in state.comments)) {
-      var post = state.postIds[postId];
-      dispatch(fetchComments(post.permalink));
-    }
-  };
-};
-
-var collapseComment = exports.collapseComment = function collapseComment(commentId) {
-  return {
-    type: COMMENT_COLLAPSED,
-    payload: commentId
-  };
-};
-
-var foundNode = exports.foundNode = function foundNode(node) {
-  return {
-    type: FOUND_NODE,
-    payload: node
-  };
-};
-
-var setBlacklist = exports.setBlacklist = function setBlacklist(object) {
-  return {
-    type: SET_BLACKLIST,
-    payload: object
-  };
-};
-
-var changeBlacklist = exports.changeBlacklist = function changeBlacklist(object) {
-  return {
-    type: CHANGE_BLACKLIST,
-    payload: object
-  };
-};
-
-/***/ }),
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var freeGlobal = __webpack_require__(109);
-
-/** Detect free variable `self`. */
-var freeSelf = (typeof self === 'undefined' ? 'undefined' : _typeof(self)) == 'object' && self && self.Object === Object && self;
-
-/** Used as a reference to the global object. */
-var root = freeGlobal || freeSelf || Function('return this')();
-
-module.exports = root;
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
-  return value != null && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
-
-var _createStore = __webpack_require__(105);
-
-var _createStore2 = _interopRequireDefault(_createStore);
-
-var _combineReducers = __webpack_require__(246);
-
-var _combineReducers2 = _interopRequireDefault(_combineReducers);
-
-var _bindActionCreators = __webpack_require__(245);
-
-var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
-
-var _applyMiddleware = __webpack_require__(244);
-
-var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
-
-var _compose = __webpack_require__(104);
-
-var _compose2 = _interopRequireDefault(_compose);
-
-var _warning = __webpack_require__(106);
-
-var _warning2 = _interopRequireDefault(_warning);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/*
-* This is a dummy function to check if the function name has been altered by minification.
-* If the function has been minified and NODE_ENV !== 'production', warn the user.
-*/
-function isCrushed() {}
-
-if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
-  (0, _warning2.default)('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
-}
-
-exports.createStore = _createStore2.default;
-exports.combineReducers = _combineReducers2.default;
-exports.bindActionCreators = _bindActionCreators2.default;
-exports.applyMiddleware = _applyMiddleware2.default;
-exports.compose = _compose2.default;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 39 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const STORE_NAME = "REDDIT_EVERYWHERE";
-/* harmony export (immutable) */ __webpack_exports__["d"] = STORE_NAME;
-
-const COMPLETE = "complete";
-/* harmony export (immutable) */ __webpack_exports__["h"] = COMPLETE;
- // Based on chrome spec. Don't change!
-const URL_UPDATED_EVENT = "EVENT__URL_UPDATED";
-/* harmony export (immutable) */ __webpack_exports__["i"] = URL_UPDATED_EVENT;
-
-const BAD_WORDS = [
-    'fuck',
-    'shit',
-    'damn',
-    'bitch',
-    'ass',
-    'crap',
-    'piss',
-    'dick',
-    'cock',
-    'pussy',
-];
-/* harmony export (immutable) */ __webpack_exports__["c"] = BAD_WORDS;
-
-const NODE_ACTIONS = {
-    AFTER: 'after',
-    APPEND: 'append',
-    BEFORE: 'before',
-    INSERT: 'insert',
-    REPLACE: 'replace',
-};
-/* harmony export (immutable) */ __webpack_exports__["e"] = NODE_ACTIONS;
-
-// Specific rules for popular websites
-const PAGE_LOCATIONS = {
-    'youtube.com': {
-        name: '#ticket-shelf',
-        type: NODE_ACTIONS.INSERT,
-    },
-    'gfycat.com': {
-        name: '#controls-container',
-        type: NODE_ACTIONS.AFTER,
-    },
-    'twitter.com': {
-        name: '.permalink-tweet-container',
-        type: NODE_ACTIONS.AFTER,
-    },
-    'streamable.com': {
-        name: '.stickypush',
-        type: NODE_ACTIONS.AFTER,
-    },
-    'al.com': {
-        name: '#article__footer',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    'npr.com': {
-        name: '#newsletter-acquisition-callout-data',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    'independent.co.uk': {
-        name: '#commentsDiv',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    'imgur.com': {
-        name: '#comments',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    'washingtonpost.com': {
-        name: '#comments',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    'wikipedia.org': {
-        name: '#References',
-        type: NODE_ACTIONS.BEFORE,
-    }
-};
-/* harmony export (immutable) */ __webpack_exports__["f"] = PAGE_LOCATIONS;
-
-// what to try if the domain isn't in our specific list
-const DEFAULT_LOCATIONS = [
-    {
-        name: '#comments',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    {
-        name: '#disqus_thread',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    {
-        name: '#fb-comments',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    {
-        name: '#article__footer',
-        type: NODE_ACTIONS.REPLACE,
-    },
-    {
-        name: 'footer',
-        type: NODE_ACTIONS.BEFORE,
-    },
-];
-/* harmony export (immutable) */ __webpack_exports__["g"] = DEFAULT_LOCATIONS;
-
-const results_data = {
-    "kind": "Listing",
-    "data": {
-        "after": null,
-        "dist": 2,
-        "modhash": "hroyxo3ykgc9dbc9e417ef61caba5cf5a855da8fe2e2d4b474",
-        "whitelist_status": "all_ads",
-        "children": [
-            {
-                "kind": "t3",
-                "data": {
-                    "domain": "washingtonpost.com",
-                    "approved_at_utc": null,
-                    "author_flair_text_color": null,
-                    "mod_reason_by": null,
-                    "banned_by": null,
-                    "num_reports": null,
-                    "author_flair_type": "text",
-                    "subreddit_id": "t5_2qh4j",
-                    "thumbnail_width": 140,
-                    "subreddit": "europe",
-                    "selftext_html": null,
-                    "selftext": "",
-                    "likes": null,
-                    "suggested_sort": null,
-                    "user_reports": [],
-                    "secure_media": null,
-                    "is_reddit_media_domain": false,
-                    "saved": false,
-                    "id": "7q3wr0",
-                    "banned_at_utc": null,
-                    "mod_reason_title": null,
-                    "view_count": 23698,
-                    "archived": false,
-                    "clicked": false,
-                    "media_embed": {},
-                    "report_reasons": null,
-                    "author": "jimrosenz",
-                    "num_crossposts": 0,
-                    "link_flair_text": null,
-                    "mod_reports": [],
-                    "can_mod_post": false,
-                    "link_flair_richtext": [],
-                    "is_crosspostable": true,
-                    "pinned": false,
-                    "score": 887,
-                    "approved_by": null,
-                    "over_18": false,
-                    "hidden": false,
-                    "preview": {
-                        "images": [
-                            {
-                                "source": {
-                                    "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?s=bd74781535207b91c924b6edb1e1d358",
-                                    "width": 1484,
-                                    "height": 1414
-                                },
-                                "resolutions": [
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=108&amp;s=a38a88ce03bd6de7a455d676b9d8deb9",
-                                        "width": 108,
-                                        "height": 102
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=216&amp;s=0e7e68c4c77f451128ee07e8d42a8bed",
-                                        "width": 216,
-                                        "height": 205
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=320&amp;s=2525da752f3e38e88d1a5a94c1da127f",
-                                        "width": 320,
-                                        "height": 304
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=640&amp;s=24e3df0b870d47e6e854bc24dd971b78",
-                                        "width": 640,
-                                        "height": 609
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=960&amp;s=dcc5a4ac2b7a2043b1ea5f45b6af77b8",
-                                        "width": 960,
-                                        "height": 914
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=1080&amp;s=a2558bff165cb86fbe54032253becffb",
-                                        "width": 1080,
-                                        "height": 1029
-                                    }
-                                ],
-                                "variants": {},
-                                "id": "wMWe-XHP5aq0FT5xjkh9XILP5Kj8LigIxL3zuWJ-mwg"
-                            }
-                        ],
-                        "enabled": false
-                    },
-                    "thumbnail": "https://b.thumbs.redditmedia.com/MyNt7OfBCX6PCBkdkAVpngTmqIWiPuZPiMu7V_M7DWs.jpg",
-                    "whitelist_status": "all_ads",
-                    "edited": false,
-                    "link_flair_css_class": null,
-                    "author_flair_richtext": [],
-                    "author_flair_css_class": null,
-                    "contest_mode": false,
-                    "gilded": 0,
-                    "locked": false,
-                    "downs": 0,
-                    "brand_safe": true,
-                    "secure_media_embed": {},
-                    "removal_reason": null,
-                    "post_hint": "link",
-                    "author_flair_text": null,
-                    "stickied": false,
-                    "visited": false,
-                    "can_gild": true,
-                    "thumbnail_height": 133,
-                    "name": "t3_7q3wr0",
-                    "spoiler": false,
-                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/",
-                    "subreddit_type": "public",
-                    "parent_whitelist_status": "all_ads",
-                    "hide_score": false,
-                    "created": 1515870355,
-                    "url": "https://www.washingtonpost.com/news/worldviews/wp/2014/12/04/watch-how-europe-is-greener-now-than-100-years-ago/?utm_term=.7ffd7a92f44c",
-                    "link_flair_type": "text",
-                    "quarantine": false,
-                    "rte_mode": "markdown",
-                    "created_utc": 1515841555,
-                    "subreddit_name_prefixed": "r/europe",
-                    "ups": 887,
-                    "media": null,
-                    "link_flair_text_color": "dark",
-                    "author_flair_background_color": null,
-                    "num_comments": 212,
-                    "is_self": false,
-                    "title": "Watch: How Europe is greener now than 100 years ago",
-                    "mod_note": null,
-                    "is_video": false,
-                    "distinguished": null
-                }
-            },
-            {
-                "kind": "t3",
-                "data": {
-                    "domain": "washingtonpost.com",
-                    "approved_at_utc": null,
-                    "author_flair_text_color": null,
-                    "mod_reason_by": null,
-                    "banned_by": null,
-                    "num_reports": null,
-                    "author_flair_type": "text",
-                    "subreddit_id": "t5_2tyt1",
-                    "thumbnail_width": 140,
-                    "subreddit": "theworldnews",
-                    "selftext_html": null,
-                    "selftext": "",
-                    "likes": null,
-                    "suggested_sort": null,
-                    "user_reports": [],
-                    "secure_media": null,
-                    "is_reddit_media_domain": false,
-                    "saved": false,
-                    "id": "7q4m72",
-                    "banned_at_utc": null,
-                    "mod_reason_title": null,
-                    "view_count": 12,
-                    "archived": false,
-                    "clicked": false,
-                    "media_embed": {},
-                    "report_reasons": null,
-                    "author": "worldnewsbot",
-                    "num_crossposts": 0,
-                    "link_flair_text": null,
-                    "mod_reports": [],
-                    "can_mod_post": false,
-                    "link_flair_richtext": [],
-                    "is_crosspostable": true,
-                    "pinned": false,
-                    "score": 2,
-                    "approved_by": null,
-                    "over_18": false,
-                    "hidden": false,
-                    "preview": {
-                        "images": [
-                            {
-                                "source": {
-                                    "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?s=bd74781535207b91c924b6edb1e1d358",
-                                    "width": 1484,
-                                    "height": 1414
-                                },
-                                "resolutions": [
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=108&amp;s=a38a88ce03bd6de7a455d676b9d8deb9",
-                                        "width": 108,
-                                        "height": 102
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=216&amp;s=0e7e68c4c77f451128ee07e8d42a8bed",
-                                        "width": 216,
-                                        "height": 205
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=320&amp;s=2525da752f3e38e88d1a5a94c1da127f",
-                                        "width": 320,
-                                        "height": 304
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=640&amp;s=24e3df0b870d47e6e854bc24dd971b78",
-                                        "width": 640,
-                                        "height": 609
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=960&amp;s=dcc5a4ac2b7a2043b1ea5f45b6af77b8",
-                                        "width": 960,
-                                        "height": 914
-                                    },
-                                    {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&amp;crop=faces%2Centropy&amp;arh=2&amp;w=1080&amp;s=a2558bff165cb86fbe54032253becffb",
-                                        "width": 1080,
-                                        "height": 1029
-                                    }
-                                ],
-                                "variants": {},
-                                "id": "wMWe-XHP5aq0FT5xjkh9XILP5Kj8LigIxL3zuWJ-mwg"
-                            }
-                        ],
-                        "enabled": false
-                    },
-                    "thumbnail": "default",
-                    "whitelist_status": null,
-                    "edited": false,
-                    "link_flair_css_class": null,
-                    "author_flair_richtext": [],
-                    "author_flair_css_class": null,
-                    "contest_mode": false,
-                    "gilded": 0,
-                    "locked": false,
-                    "downs": 0,
-                    "brand_safe": false,
-                    "secure_media_embed": {},
-                    "removal_reason": null,
-                    "post_hint": "link",
-                    "author_flair_text": null,
-                    "stickied": false,
-                    "visited": false,
-                    "can_gild": true,
-                    "thumbnail_height": 133,
-                    "name": "t3_7q4m72",
-                    "spoiler": false,
-                    "permalink": "/r/theworldnews/comments/7q4m72/watch_how_europe_is_greener_now_than_100_years_ago/",
-                    "subreddit_type": "public",
-                    "parent_whitelist_status": null,
-                    "hide_score": false,
-                    "created": 1515881155,
-                    "url": "https://www.washingtonpost.com/news/worldviews/wp/2014/12/04/watch-how-europe-is-greener-now-than-100-years-ago/?utm_term=.7ffd7a92f44c",
-                    "link_flair_type": "text",
-                    "quarantine": false,
-                    "rte_mode": "markdown",
-                    "created_utc": 1515852355,
-                    "subreddit_name_prefixed": "r/theworldnews",
-                    "ups": 2,
-                    "media": null,
-                    "link_flair_text_color": "dark",
-                    "author_flair_background_color": null,
-                    "num_comments": 0,
-                    "is_self": false,
-                    "title": "Watch: How Europe is greener now than 100 years ago",
-                    "mod_note": null,
-                    "is_video": false,
-                    "distinguished": null
-                }
-            }
-        ],
-        "before": null
-    }
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = results_data;
-
-const listing_data = [
-    {
-        "kind": "Listing",
-        "data": {
-            "after": null,
-            "whitelist_status": "all_ads",
-            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-            "dist": 1,
-            "children": [
-                {
-                    "kind": "t3",
-                    "data": {
-                        "domain": "washingtonpost.com",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "subreddit_id": "t5_2qh4j",
-                        "thumbnail_width": 140,
-                        "subreddit": "europe",
-                        "selftext_html": null,
-                        "selftext": "",
-                        "likes": null,
-                        "suggested_sort": null,
-                        "rte_mode": "markdown",
-                        "mod_note": null,
-                        "user_reports": [],
-                        "secure_media": null,
-                        "is_reddit_media_domain": false,
-                        "saved": false,
-                        "id": "7q3wr0",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "view_count": 23698,
-                        "archived": false,
-                        "clicked": false,
-                        "report_reasons": null,
-                        "author": "jimrosenz",
-                        "num_crossposts": 0,
-                        "link_flair_text": null,
-                        "link_flair_type": "text",
-                        "can_mod_post": false,
-                        "link_flair_richtext": [],
-                        "is_crosspostable": true,
-                        "pinned": false,
-                        "score": 886,
-                        "approved_by": null,
-                        "over_18": false,
-                        "removal_reason": null,
-                        "hidden": false,
-                        "preview": {
-                            "images": [
-                                {
-                                    "source": {
-                                        "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?s=bd74781535207b91c924b6edb1e1d358",
-                                        "width": 1484,
-                                        "height": 1414
-                                    },
-                                    "resolutions": [
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=108&s=a38a88ce03bd6de7a455d676b9d8deb9",
-                                            "width": 108,
-                                            "height": 102
-                                        },
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=216&s=0e7e68c4c77f451128ee07e8d42a8bed",
-                                            "width": 216,
-                                            "height": 205
-                                        },
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=320&s=2525da752f3e38e88d1a5a94c1da127f",
-                                            "width": 320,
-                                            "height": 304
-                                        },
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=640&s=24e3df0b870d47e6e854bc24dd971b78",
-                                            "width": 640,
-                                            "height": 609
-                                        },
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=960&s=dcc5a4ac2b7a2043b1ea5f45b6af77b8",
-                                            "width": 960,
-                                            "height": 914
-                                        },
-                                        {
-                                            "url": "https://i.redditmedia.com/NxlxuJ3dIpkRYIHPLDucZgnppwQbXg5UR2gvJT-ZQZk.jpg?fit=crop&crop=faces%2Centropy&arh=2&w=1080&s=a2558bff165cb86fbe54032253becffb",
-                                            "width": 1080,
-                                            "height": 1029
-                                        }
-                                    ],
-                                    "variants": {},
-                                    "id": "wMWe-XHP5aq0FT5xjkh9XILP5Kj8LigIxL3zuWJ-mwg"
-                                }
-                            ],
-                            "enabled": false
-                        },
-                        "num_comments": 212,
-                        "thumbnail": "https://b.thumbs.redditmedia.com/MyNt7OfBCX6PCBkdkAVpngTmqIWiPuZPiMu7V_M7DWs.jpg",
-                        "hide_score": false,
-                        "edited": false,
-                        "link_flair_css_class": null,
-                        "brand_safe": true,
-                        "author_flair_css_class": null,
-                        "contest_mode": false,
-                        "gilded": 0,
-                        "title": "Watch: How Europe is greener now than 100 years ago",
-                        "downs": 0,
-                        "author_flair_richtext": [],
-                        "secure_media_embed": {},
-                        "media_embed": {},
-                        "post_hint": "link",
-                        "can_gild": true,
-                        "thumbnail_height": 133,
-                        "name": "t3_7q3wr0",
-                        "parent_whitelist_status": "all_ads",
-                        "author_flair_text_color": null,
-                        "spoiler": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/",
-                        "subreddit_type": "public",
-                        "locked": false,
-                        "stickied": false,
-                        "created": 1515870355,
-                        "url": "https://www.washingtonpost.com/news/worldviews/wp/2014/12/04/watch-how-europe-is-greener-now-than-100-years-ago/?utm_term=.7ffd7a92f44c",
-                        "author_flair_text": null,
-                        "quarantine": false,
-                        "whitelist_status": "all_ads",
-                        "created_utc": 1515841555,
-                        "subreddit_name_prefixed": "r/europe",
-                        "distinguished": null,
-                        "media": null,
-                        "link_flair_text_color": "dark",
-                        "upvote_ratio": 0.93,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "is_self": false,
-                        "visited": false,
-                        "num_reports": null,
-                        "is_video": false,
-                        "ups": 886
-                    }
-                }
-            ],
-            "before": null
-        }
-    },
-    {
-        "kind": "Listing",
-        "data": {
-            "after": null,
-            "whitelist_status": "all_ads",
-            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-            "dist": null,
-            "children": [
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "richtext",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "text",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": {
-                                                                    "kind": "Listing",
-                                                                    "data": {
-                                                                        "after": null,
-                                                                        "whitelist_status": "all_ads",
-                                                                        "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                        "dist": null,
-                                                                        "children": [
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "richtext",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "t1",
-                                                                                                    "data": {
-                                                                                                        "subreddit_id": "t5_2qh4j",
-                                                                                                        "approved_at_utc": null,
-                                                                                                        "mod_reason_by": null,
-                                                                                                        "banned_by": null,
-                                                                                                        "author_flair_type": "richtext",
-                                                                                                        "removal_reason": null,
-                                                                                                        "link_id": "t3_7q3wr0",
-                                                                                                        "likes": null,
-                                                                                                        "replies": {
-                                                                                                            "kind": "Listing",
-                                                                                                            "data": {
-                                                                                                                "after": null,
-                                                                                                                "whitelist_status": "all_ads",
-                                                                                                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                "dist": null,
-                                                                                                                "children": [
-                                                                                                                    {
-                                                                                                                        "kind": "t1",
-                                                                                                                        "data": {
-                                                                                                                            "subreddit_id": "t5_2qh4j",
-                                                                                                                            "approved_at_utc": null,
-                                                                                                                            "mod_reason_by": null,
-                                                                                                                            "banned_by": null,
-                                                                                                                            "author_flair_type": "richtext",
-                                                                                                                            "removal_reason": null,
-                                                                                                                            "link_id": "t3_7q3wr0",
-                                                                                                                            "likes": null,
-                                                                                                                            "replies": {
-                                                                                                                                "kind": "Listing",
-                                                                                                                                "data": {
-                                                                                                                                    "after": null,
-                                                                                                                                    "whitelist_status": "all_ads",
-                                                                                                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                                    "dist": null,
-                                                                                                                                    "children": [
-                                                                                                                                        {
-                                                                                                                                            "kind": "more",
-                                                                                                                                            "data": {
-                                                                                                                                                "count": 10,
-                                                                                                                                                "name": "t1_dsmmbv2",
-                                                                                                                                                "id": "dsmmbv2",
-                                                                                                                                                "parent_id": "t1_dsm8po3",
-                                                                                                                                                "depth": 6,
-                                                                                                                                                "children": [
-                                                                                                                                                    "dsmmbv2"
-                                                                                                                                                ]
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    ],
-                                                                                                                                    "before": null
-                                                                                                                                }
-                                                                                                                            },
-                                                                                                                            "user_reports": [],
-                                                                                                                            "saved": false,
-                                                                                                                            "id": "dsm8po3",
-                                                                                                                            "banned_at_utc": null,
-                                                                                                                            "mod_reason_title": null,
-                                                                                                                            "gilded": 0,
-                                                                                                                            "archived": false,
-                                                                                                                            "report_reasons": null,
-                                                                                                                            "author": "Tossal",
-                                                                                                                            "can_mod_post": false,
-                                                                                                                            "ups": 29,
-                                                                                                                            "parent_id": "t1_dsm7tht",
-                                                                                                                            "score": 29,
-                                                                                                                            "approved_by": null,
-                                                                                                                            "downs": 0,
-                                                                                                                            "body": "Red squirrels returned here a few years ago, after 30-100 years of absence in most places. They've been gone for so long that lots of people actually think they're an invasive species. Now let's wait for their predators to catch up and fix the ecosystem, but so far they've already displaced the massive rats that had taken up their niche in the meantime, which is an improvement.",
-                                                                                                                            "edited": false,
-                                                                                                                            "author_flair_css_class": "EART",
-                                                                                                                            "collapsed": false,
-                                                                                                                            "author_flair_richtext": [
-                                                                                                                                {
-                                                                                                                                    "e": "text",
-                                                                                                                                    "t": "Valencian Country"
-                                                                                                                                }
-                                                                                                                            ],
-                                                                                                                            "is_submitter": false,
-                                                                                                                            "collapsed_reason": null,
-                                                                                                                            "body_html": "<div class=\"md\"><p>Red squirrels returned here a few years ago, after 30-100 years of absence in most places. They&#39;ve been gone for so long that lots of people actually think they&#39;re an invasive species. Now let&#39;s wait for their predators to catch up and fix the ecosystem, but so far they&#39;ve already displaced the massive rats that had taken up their niche in the meantime, which is an improvement.</p>\n</div>",
-                                                                                                                            "stickied": false,
-                                                                                                                            "subreddit_type": "public",
-                                                                                                                            "can_gild": true,
-                                                                                                                            "subreddit": "europe",
-                                                                                                                            "author_flair_text_color": "dark",
-                                                                                                                            "score_hidden": false,
-                                                                                                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm8po3/",
-                                                                                                                            "num_reports": null,
-                                                                                                                            "name": "t1_dsm8po3",
-                                                                                                                            "created": 1515876845,
-                                                                                                                            "author_flair_text": "Valencian Country",
-                                                                                                                            "rte_mode": "markdown",
-                                                                                                                            "created_utc": 1515848045,
-                                                                                                                            "subreddit_name_prefixed": "r/europe",
-                                                                                                                            "controversiality": 0,
-                                                                                                                            "depth": 5,
-                                                                                                                            "author_flair_background_color": "#dadada",
-                                                                                                                            "mod_reports": [],
-                                                                                                                            "mod_note": null,
-                                                                                                                            "distinguished": null
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "kind": "t1",
-                                                                                                                        "data": {
-                                                                                                                            "subreddit_id": "t5_2qh4j",
-                                                                                                                            "approved_at_utc": null,
-                                                                                                                            "mod_reason_by": null,
-                                                                                                                            "banned_by": null,
-                                                                                                                            "author_flair_type": "text",
-                                                                                                                            "removal_reason": null,
-                                                                                                                            "link_id": "t3_7q3wr0",
-                                                                                                                            "likes": null,
-                                                                                                                            "replies": {
-                                                                                                                                "kind": "Listing",
-                                                                                                                                "data": {
-                                                                                                                                    "after": null,
-                                                                                                                                    "whitelist_status": "all_ads",
-                                                                                                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                                    "dist": null,
-                                                                                                                                    "children": [
-                                                                                                                                        {
-                                                                                                                                            "kind": "more",
-                                                                                                                                            "data": {
-                                                                                                                                                "count": 1,
-                                                                                                                                                "name": "t1_dsmbocc",
-                                                                                                                                                "id": "dsmbocc",
-                                                                                                                                                "parent_id": "t1_dsmbg8a",
-                                                                                                                                                "depth": 6,
-                                                                                                                                                "children": [
-                                                                                                                                                    "dsmbocc"
-                                                                                                                                                ]
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    ],
-                                                                                                                                    "before": null
-                                                                                                                                }
-                                                                                                                            },
-                                                                                                                            "user_reports": [],
-                                                                                                                            "saved": false,
-                                                                                                                            "id": "dsmbg8a",
-                                                                                                                            "banned_at_utc": null,
-                                                                                                                            "mod_reason_title": null,
-                                                                                                                            "gilded": 0,
-                                                                                                                            "archived": false,
-                                                                                                                            "report_reasons": null,
-                                                                                                                            "author": "kurtchen11",
-                                                                                                                            "can_mod_post": false,
-                                                                                                                            "ups": 18,
-                                                                                                                            "parent_id": "t1_dsm7tht",
-                                                                                                                            "score": 18,
-                                                                                                                            "approved_by": null,
-                                                                                                                            "downs": 0,
-                                                                                                                            "body": "An amazing comeback for me is the wisent.\nThats the european bison.\nIt was basically extinct in 1920, only a few individuals survived in captivity.\n\nSince then the wisent slowly got reintroduced into several countries in Europe.\n\nIn 2004 a small herd was brought to germany, not far from where i was born. Thats a pretty huge deal because the wisent was extinct in germany for over 500 years.\n\nPart of why this is so awesome for lots of us is simply the size of those bisons: we are only used to rabbits and boars, sometimes small deer. \n",
-                                                                                                                            "edited": false,
-                                                                                                                            "author_flair_css_class": null,
-                                                                                                                            "collapsed": false,
-                                                                                                                            "author_flair_richtext": [],
-                                                                                                                            "is_submitter": false,
-                                                                                                                            "collapsed_reason": null,
-                                                                                                                            "body_html": "<div class=\"md\"><p>An amazing comeback for me is the wisent.\nThats the european bison.\nIt was basically extinct in 1920, only a few individuals survived in captivity.</p>\n\n<p>Since then the wisent slowly got reintroduced into several countries in Europe.</p>\n\n<p>In 2004 a small herd was brought to germany, not far from where i was born. Thats a pretty huge deal because the wisent was extinct in germany for over 500 years.</p>\n\n<p>Part of why this is so awesome for lots of us is simply the size of those bisons: we are only used to rabbits and boars, sometimes small deer. </p>\n</div>",
-                                                                                                                            "stickied": false,
-                                                                                                                            "subreddit_type": "public",
-                                                                                                                            "can_gild": true,
-                                                                                                                            "subreddit": "europe",
-                                                                                                                            "author_flair_text_color": null,
-                                                                                                                            "score_hidden": false,
-                                                                                                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmbg8a/",
-                                                                                                                            "num_reports": null,
-                                                                                                                            "name": "t1_dsmbg8a",
-                                                                                                                            "created": 1515882261,
-                                                                                                                            "author_flair_text": null,
-                                                                                                                            "rte_mode": "markdown",
-                                                                                                                            "created_utc": 1515853461,
-                                                                                                                            "subreddit_name_prefixed": "r/europe",
-                                                                                                                            "controversiality": 0,
-                                                                                                                            "depth": 5,
-                                                                                                                            "author_flair_background_color": null,
-                                                                                                                            "mod_reports": [],
-                                                                                                                            "mod_note": null,
-                                                                                                                            "distinguished": null
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "kind": "t1",
-                                                                                                                        "data": {
-                                                                                                                            "subreddit_id": "t5_2qh4j",
-                                                                                                                            "approved_at_utc": null,
-                                                                                                                            "mod_reason_by": null,
-                                                                                                                            "banned_by": null,
-                                                                                                                            "author_flair_type": "richtext",
-                                                                                                                            "removal_reason": null,
-                                                                                                                            "link_id": "t3_7q3wr0",
-                                                                                                                            "likes": null,
-                                                                                                                            "replies": {
-                                                                                                                                "kind": "Listing",
-                                                                                                                                "data": {
-                                                                                                                                    "after": null,
-                                                                                                                                    "whitelist_status": "all_ads",
-                                                                                                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                                    "dist": null,
-                                                                                                                                    "children": [
-                                                                                                                                        {
-                                                                                                                                            "kind": "t1",
-                                                                                                                                            "data": {
-                                                                                                                                                "subreddit_id": "t5_2qh4j",
-                                                                                                                                                "approved_at_utc": null,
-                                                                                                                                                "mod_reason_by": null,
-                                                                                                                                                "banned_by": null,
-                                                                                                                                                "author_flair_type": "richtext",
-                                                                                                                                                "removal_reason": null,
-                                                                                                                                                "link_id": "t3_7q3wr0",
-                                                                                                                                                "likes": null,
-                                                                                                                                                "replies": "",
-                                                                                                                                                "user_reports": [],
-                                                                                                                                                "saved": false,
-                                                                                                                                                "id": "dsmb968",
-                                                                                                                                                "banned_at_utc": null,
-                                                                                                                                                "mod_reason_title": null,
-                                                                                                                                                "gilded": 0,
-                                                                                                                                                "archived": false,
-                                                                                                                                                "report_reasons": null,
-                                                                                                                                                "author": "NuruYetu",
-                                                                                                                                                "can_mod_post": false,
-                                                                                                                                                "ups": 10,
-                                                                                                                                                "parent_id": "t1_dsm9s1r",
-                                                                                                                                                "score": 10,
-                                                                                                                                                "approved_by": null,
-                                                                                                                                                "downs": 0,
-                                                                                                                                                "body": "Flanders*, Wallonia has had sightings of wolves for a while now :)",
-                                                                                                                                                "edited": false,
-                                                                                                                                                "author_flair_css_class": "BELG",
-                                                                                                                                                "collapsed": false,
-                                                                                                                                                "author_flair_richtext": [
-                                                                                                                                                    {
-                                                                                                                                                        "e": "text",
-                                                                                                                                                        "t": "Black Romania"
-                                                                                                                                                    }
-                                                                                                                                                ],
-                                                                                                                                                "is_submitter": false,
-                                                                                                                                                "collapsed_reason": null,
-                                                                                                                                                "body_html": "<div class=\"md\"><p>Flanders*, Wallonia has had sightings of wolves for a while now :)</p>\n</div>",
-                                                                                                                                                "stickied": false,
-                                                                                                                                                "subreddit_type": "public",
-                                                                                                                                                "can_gild": true,
-                                                                                                                                                "subreddit": "europe",
-                                                                                                                                                "author_flair_text_color": null,
-                                                                                                                                                "score_hidden": false,
-                                                                                                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmb968/",
-                                                                                                                                                "num_reports": null,
-                                                                                                                                                "name": "t1_dsmb968",
-                                                                                                                                                "created": 1515881925,
-                                                                                                                                                "author_flair_text": "Black Romania",
-                                                                                                                                                "rte_mode": "markdown",
-                                                                                                                                                "created_utc": 1515853125,
-                                                                                                                                                "subreddit_name_prefixed": "r/europe",
-                                                                                                                                                "controversiality": 0,
-                                                                                                                                                "depth": 6,
-                                                                                                                                                "author_flair_background_color": null,
-                                                                                                                                                "mod_reports": [],
-                                                                                                                                                "mod_note": null,
-                                                                                                                                                "distinguished": null
-                                                                                                                                            }
-                                                                                                                                        },
-                                                                                                                                        {
-                                                                                                                                            "kind": "more",
-                                                                                                                                            "data": {
-                                                                                                                                                "count": 1,
-                                                                                                                                                "name": "t1_dsmu8l3",
-                                                                                                                                                "id": "dsmu8l3",
-                                                                                                                                                "parent_id": "t1_dsm9s1r",
-                                                                                                                                                "depth": 6,
-                                                                                                                                                "children": [
-                                                                                                                                                    "dsmu8l3"
-                                                                                                                                                ]
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    ],
-                                                                                                                                    "before": null
-                                                                                                                                }
-                                                                                                                            },
-                                                                                                                            "user_reports": [],
-                                                                                                                            "saved": false,
-                                                                                                                            "id": "dsm9s1r",
-                                                                                                                            "banned_at_utc": null,
-                                                                                                                            "mod_reason_title": null,
-                                                                                                                            "gilded": 0,
-                                                                                                                            "archived": false,
-                                                                                                                            "report_reasons": null,
-                                                                                                                            "author": "Bororum",
-                                                                                                                            "can_mod_post": false,
-                                                                                                                            "ups": 11,
-                                                                                                                            "parent_id": "t1_dsm7tht",
-                                                                                                                            "score": 11,
-                                                                                                                            "approved_by": null,
-                                                                                                                            "downs": 0,
-                                                                                                                            "body": "Belgium just got its first visit from a wolf in a hundred years! ",
-                                                                                                                            "edited": false,
-                                                                                                                            "author_flair_css_class": "BELG",
-                                                                                                                            "collapsed": false,
-                                                                                                                            "author_flair_richtext": [
-                                                                                                                                {
-                                                                                                                                    "e": "text",
-                                                                                                                                    "t": "Belgium"
-                                                                                                                                }
-                                                                                                                            ],
-                                                                                                                            "is_submitter": false,
-                                                                                                                            "collapsed_reason": null,
-                                                                                                                            "body_html": "<div class=\"md\"><p>Belgium just got its first visit from a wolf in a hundred years! </p>\n</div>",
-                                                                                                                            "stickied": false,
-                                                                                                                            "subreddit_type": "public",
-                                                                                                                            "can_gild": true,
-                                                                                                                            "subreddit": "europe",
-                                                                                                                            "author_flair_text_color": null,
-                                                                                                                            "score_hidden": false,
-                                                                                                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9s1r/",
-                                                                                                                            "num_reports": null,
-                                                                                                                            "name": "t1_dsm9s1r",
-                                                                                                                            "created": 1515879162,
-                                                                                                                            "author_flair_text": "Belgium",
-                                                                                                                            "rte_mode": "markdown",
-                                                                                                                            "created_utc": 1515850362,
-                                                                                                                            "subreddit_name_prefixed": "r/europe",
-                                                                                                                            "controversiality": 0,
-                                                                                                                            "depth": 5,
-                                                                                                                            "author_flair_background_color": null,
-                                                                                                                            "mod_reports": [],
-                                                                                                                            "mod_note": null,
-                                                                                                                            "distinguished": null
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "kind": "more",
-                                                                                                                        "data": {
-                                                                                                                            "count": 6,
-                                                                                                                            "name": "t1_dsma7yl",
-                                                                                                                            "id": "dsma7yl",
-                                                                                                                            "parent_id": "t1_dsm7tht",
-                                                                                                                            "depth": 5,
-                                                                                                                            "children": [
-                                                                                                                                "dsma7yl"
-                                                                                                                            ]
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "before": null
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "user_reports": [],
-                                                                                                        "saved": false,
-                                                                                                        "id": "dsm7tht",
-                                                                                                        "banned_at_utc": null,
-                                                                                                        "mod_reason_title": null,
-                                                                                                        "gilded": 0,
-                                                                                                        "archived": false,
-                                                                                                        "report_reasons": null,
-                                                                                                        "author": "zek997",
-                                                                                                        "can_mod_post": false,
-                                                                                                        "ups": 56,
-                                                                                                        "parent_id": "t1_dsm7p6m",
-                                                                                                        "score": 56,
-                                                                                                        "approved_by": null,
-                                                                                                        "downs": 0,
-                                                                                                        "body": "Wild animals are making a comeback too, from what I heard. Population of wolves, lynxes, bears, etc, is increasing all throughout Europe. More forests and grassland mean more habitat for them.",
-                                                                                                        "edited": false,
-                                                                                                        "author_flair_css_class": "PORT",
-                                                                                                        "collapsed": false,
-                                                                                                        "author_flair_richtext": [
-                                                                                                            {
-                                                                                                                "e": "text",
-                                                                                                                "t": "Portugal"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "is_submitter": false,
-                                                                                                        "collapsed_reason": null,
-                                                                                                        "body_html": "<div class=\"md\"><p>Wild animals are making a comeback too, from what I heard. Population of wolves, lynxes, bears, etc, is increasing all throughout Europe. More forests and grassland mean more habitat for them.</p>\n</div>",
-                                                                                                        "stickied": false,
-                                                                                                        "subreddit_type": "public",
-                                                                                                        "can_gild": true,
-                                                                                                        "subreddit": "europe",
-                                                                                                        "author_flair_text_color": "dark",
-                                                                                                        "score_hidden": false,
-                                                                                                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7tht/",
-                                                                                                        "num_reports": null,
-                                                                                                        "name": "t1_dsm7tht",
-                                                                                                        "created": 1515874636,
-                                                                                                        "author_flair_text": "Portugal",
-                                                                                                        "rte_mode": "markdown",
-                                                                                                        "created_utc": 1515845836,
-                                                                                                        "subreddit_name_prefixed": "r/europe",
-                                                                                                        "controversiality": 0,
-                                                                                                        "depth": 4,
-                                                                                                        "author_flair_background_color": "",
-                                                                                                        "mod_reports": [],
-                                                                                                        "mod_note": null,
-                                                                                                        "distinguished": null
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    "kind": "t1",
-                                                                                                    "data": {
-                                                                                                        "subreddit_id": "t5_2qh4j",
-                                                                                                        "approved_at_utc": null,
-                                                                                                        "mod_reason_by": null,
-                                                                                                        "banned_by": null,
-                                                                                                        "author_flair_type": "richtext",
-                                                                                                        "removal_reason": null,
-                                                                                                        "link_id": "t3_7q3wr0",
-                                                                                                        "likes": null,
-                                                                                                        "replies": {
-                                                                                                            "kind": "Listing",
-                                                                                                            "data": {
-                                                                                                                "after": null,
-                                                                                                                "whitelist_status": "all_ads",
-                                                                                                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                "dist": null,
-                                                                                                                "children": [
-                                                                                                                    {
-                                                                                                                        "kind": "t1",
-                                                                                                                        "data": {
-                                                                                                                            "subreddit_id": "t5_2qh4j",
-                                                                                                                            "approved_at_utc": null,
-                                                                                                                            "mod_reason_by": null,
-                                                                                                                            "banned_by": null,
-                                                                                                                            "author_flair_type": "richtext",
-                                                                                                                            "removal_reason": null,
-                                                                                                                            "link_id": "t3_7q3wr0",
-                                                                                                                            "likes": null,
-                                                                                                                            "replies": "",
-                                                                                                                            "user_reports": [],
-                                                                                                                            "saved": false,
-                                                                                                                            "id": "dsma740",
-                                                                                                                            "banned_at_utc": null,
-                                                                                                                            "mod_reason_title": null,
-                                                                                                                            "gilded": 0,
-                                                                                                                            "archived": false,
-                                                                                                                            "report_reasons": null,
-                                                                                                                            "author": "YoSoyUnPayaso",
-                                                                                                                            "can_mod_post": false,
-                                                                                                                            "ups": 7,
-                                                                                                                            "parent_id": "t1_dsm9bvq",
-                                                                                                                            "score": 7,
-                                                                                                                            "approved_by": null,
-                                                                                                                            "downs": 0,
-                                                                                                                            "body": "They should push through with the Natuurnetwerk though.",
-                                                                                                                            "edited": false,
-                                                                                                                            "author_flair_css_class": "NETH",
-                                                                                                                            "collapsed": false,
-                                                                                                                            "author_flair_richtext": [
-                                                                                                                                {
-                                                                                                                                    "e": "text",
-                                                                                                                                    "t": "The Netherlands"
-                                                                                                                                }
-                                                                                                                            ],
-                                                                                                                            "is_submitter": false,
-                                                                                                                            "collapsed_reason": null,
-                                                                                                                            "body_html": "<div class=\"md\"><p>They should push through with the Natuurnetwerk though.</p>\n</div>",
-                                                                                                                            "stickied": false,
-                                                                                                                            "subreddit_type": "public",
-                                                                                                                            "can_gild": true,
-                                                                                                                            "subreddit": "europe",
-                                                                                                                            "author_flair_text_color": null,
-                                                                                                                            "score_hidden": false,
-                                                                                                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsma740/",
-                                                                                                                            "num_reports": null,
-                                                                                                                            "name": "t1_dsma740",
-                                                                                                                            "created": 1515879984,
-                                                                                                                            "author_flair_text": "The Netherlands",
-                                                                                                                            "rte_mode": "markdown",
-                                                                                                                            "created_utc": 1515851184,
-                                                                                                                            "subreddit_name_prefixed": "r/europe",
-                                                                                                                            "controversiality": 0,
-                                                                                                                            "depth": 5,
-                                                                                                                            "author_flair_background_color": null,
-                                                                                                                            "mod_reports": [],
-                                                                                                                            "mod_note": null,
-                                                                                                                            "distinguished": null
-                                                                                                                        }
-                                                                                                                    },
-                                                                                                                    {
-                                                                                                                        "kind": "more",
-                                                                                                                        "data": {
-                                                                                                                            "count": 3,
-                                                                                                                            "name": "t1_dsn7m8y",
-                                                                                                                            "id": "dsn7m8y",
-                                                                                                                            "parent_id": "t1_dsm9bvq",
-                                                                                                                            "depth": 5,
-                                                                                                                            "children": [
-                                                                                                                                "dsn7m8y",
-                                                                                                                                "dsmu9tr"
-                                                                                                                            ]
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "before": null
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "user_reports": [],
-                                                                                                        "saved": false,
-                                                                                                        "id": "dsm9bvq",
-                                                                                                        "banned_at_utc": null,
-                                                                                                        "mod_reason_title": null,
-                                                                                                        "gilded": 0,
-                                                                                                        "archived": false,
-                                                                                                        "report_reasons": null,
-                                                                                                        "author": "itsgonnabeanofromme",
-                                                                                                        "can_mod_post": false,
-                                                                                                        "ups": 24,
-                                                                                                        "parent_id": "t1_dsm7p6m",
-                                                                                                        "score": 24,
-                                                                                                        "approved_by": null,
-                                                                                                        "downs": 0,
-                                                                                                        "body": "Our government is currently exploring the possibility of spending ~4 billion euros to increase the amount of trees in the country by 25%. The plan is to surround all highways with 300m wide forestry. \n\nI’m here for it. ",
-                                                                                                        "edited": false,
-                                                                                                        "author_flair_css_class": "NETH",
-                                                                                                        "collapsed": false,
-                                                                                                        "author_flair_richtext": [
-                                                                                                            {
-                                                                                                                "e": "text",
-                                                                                                                "t": "The Netherlands"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "is_submitter": false,
-                                                                                                        "collapsed_reason": null,
-                                                                                                        "body_html": "<div class=\"md\"><p>Our government is currently exploring the possibility of spending ~4 billion euros to increase the amount of trees in the country by 25%. The plan is to surround all highways with 300m wide forestry. </p>\n\n<p>I’m here for it. </p>\n</div>",
-                                                                                                        "stickied": false,
-                                                                                                        "subreddit_type": "public",
-                                                                                                        "can_gild": true,
-                                                                                                        "subreddit": "europe",
-                                                                                                        "author_flair_text_color": null,
-                                                                                                        "score_hidden": false,
-                                                                                                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9bvq/",
-                                                                                                        "num_reports": null,
-                                                                                                        "name": "t1_dsm9bvq",
-                                                                                                        "created": 1515878238,
-                                                                                                        "author_flair_text": "The Netherlands",
-                                                                                                        "rte_mode": "markdown",
-                                                                                                        "created_utc": 1515849438,
-                                                                                                        "subreddit_name_prefixed": "r/europe",
-                                                                                                        "controversiality": 0,
-                                                                                                        "depth": 4,
-                                                                                                        "author_flair_background_color": null,
-                                                                                                        "mod_reports": [],
-                                                                                                        "mod_note": null,
-                                                                                                        "distinguished": null
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    "kind": "more",
-                                                                                                    "data": {
-                                                                                                        "count": 2,
-                                                                                                        "name": "t1_dsn6vl8",
-                                                                                                        "id": "dsn6vl8",
-                                                                                                        "parent_id": "t1_dsm7p6m",
-                                                                                                        "depth": 4,
-                                                                                                        "children": [
-                                                                                                            "dsn6vl8",
-                                                                                                            "dsmdd1b"
-                                                                                                        ]
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsm7p6m",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "umnikos",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 95,
-                                                                                    "parent_id": "t1_dsm7iyx",
-                                                                                    "score": 95,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "Forests are good in all ways possible. You get more awesome forests to explore, you get cleaner air, you get more building material, you get a bigger habitat for wild animals.",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": "BULG",
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [
-                                                                                        {
-                                                                                            "e": "text",
-                                                                                            "t": "Bulgaria"
-                                                                                        }
-                                                                                    ],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>Forests are good in all ways possible. You get more awesome forests to explore, you get cleaner air, you get more building material, you get a bigger habitat for wild animals.</p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7p6m/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsm7p6m",
-                                                                                    "created": 1515874323,
-                                                                                    "author_flair_text": "Bulgaria",
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515845523,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "text",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "more",
-                                                                                                    "data": {
-                                                                                                        "count": 3,
-                                                                                                        "name": "t1_dsm8wsd",
-                                                                                                        "id": "dsm8wsd",
-                                                                                                        "parent_id": "t1_dsm8f22",
-                                                                                                        "depth": 4,
-                                                                                                        "children": [
-                                                                                                            "dsm8wsd"
-                                                                                                        ]
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsm8f22",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "IgnorantPlebs",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 17,
-                                                                                    "parent_id": "t1_dsm7iyx",
-                                                                                    "score": 17,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "It's funny how genuinely caring about the environment has been branded as something negative. I guess by the efforts of \"environmentally friendly\" big corporations?",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": null,
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>It&#39;s funny how genuinely caring about the environment has been branded as something negative. I guess by the efforts of &quot;environmentally friendly&quot; big corporations?</p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm8f22/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsm8f22",
-                                                                                    "created": 1515876136,
-                                                                                    "author_flair_text": null,
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515847336,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "before": null
-                                                                    }
-                                                                },
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsm7iyx",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "Bregvist",
-                                                                "can_mod_post": false,
-                                                                "ups": 66,
-                                                                "parent_id": "t1_dsm785d",
-                                                                "score": 66,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "Well, it was a more \"treehugger\" kind of irrational happy but, yes, you're right :)",
-                                                                "edited": false,
-                                                                "author_flair_css_class": null,
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>Well, it was a more &quot;treehugger&quot; kind of irrational happy but, yes, you&#39;re right :)</p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": null,
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7iyx/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsm7iyx",
-                                                                "created": 1515873874,
-                                                                "author_flair_text": null,
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515845074,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": null,
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        },
-                                                        {
-                                                            "kind": "more",
-                                                            "data": {
-                                                                "count": 5,
-                                                                "name": "t1_dsmp2ht",
-                                                                "id": "dsmp2ht",
-                                                                "parent_id": "t1_dsm785d",
-                                                                "depth": 2,
-                                                                "children": [
-                                                                    "dsmp2ht",
-                                                                    "dsn1ojr",
-                                                                    "dsm9vj8",
-                                                                    "dsmagrl"
-                                                                ]
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm785d",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "bruker12",
-                                            "can_mod_post": false,
-                                            "ups": 123,
-                                            "parent_id": "t1_dsm6vn8",
-                                            "score": 123,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Me too. From an environmental standpoint this is great news, since more forests means more carbon gets captured and removed from the atmosphere.",
-                                            "edited": false,
-                                            "author_flair_css_class": "NORW",
-                                            "collapsed": false,
-                                            "author_flair_richtext": [
-                                                {
-                                                    "e": "text",
-                                                    "t": "Norway"
-                                                }
-                                            ],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Me too. From an environmental standpoint this is great news, since more forests means more carbon gets captured and removed from the atmosphere.</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": "dark",
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm785d/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm785d",
-                                            "created": 1515873084,
-                                            "author_flair_text": "Norway",
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515844284,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": "",
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "more",
-                                                            "data": {
-                                                                "count": 5,
-                                                                "name": "t1_dsny5un",
-                                                                "id": "dsny5un",
-                                                                "parent_id": "t1_dsme8iu",
-                                                                "depth": 2,
-                                                                "children": [
-                                                                    "dsny5un",
-                                                                    "dsmn702",
-                                                                    "dsmzlzr",
-                                                                    "dsmesxr"
-                                                                ]
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsme8iu",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "anyonesany",
-                                            "can_mod_post": false,
-                                            "ups": 12,
-                                            "parent_id": "t1_dsm6vn8",
-                                            "score": 12,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "While it's great to see the forests in europe growing, the map shows that this means we have a lot less farmland here than we did in the past. I'm sure that now a lot more food is being imported than 100 years ago. So more forests here might just mean fewer forests elsewhere. It would be interesting to see similar maps for other parts of the world.",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>While it&#39;s great to see the forests in europe growing, the map shows that this means we have a lot less farmland here than we did in the past. I&#39;m sure that now a lot more food is being imported than 100 years ago. So more forests here might just mean fewer forests elsewhere. It would be interesting to see similar maps for other parts of the world.</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsme8iu/",
-                                            "num_reports": null,
-                                            "name": "t1_dsme8iu",
-                                            "created": 1515886552,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515857752,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 4,
-                                            "name": "t1_dsmy0v7",
-                                            "id": "dsmy0v7",
-                                            "parent_id": "t1_dsm6vn8",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmy0v7",
-                                                "dsmjp9g",
-                                                "dsmffcl"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm6vn8",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Bregvist",
-                        "can_mod_post": false,
-                        "ups": 352,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 352,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "This makes me happy.",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>This makes me happy.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm6vn8/",
-                        "num_reports": null,
-                        "name": "t1_dsm6vn8",
-                        "created": 1515872143,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515843343,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "text",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": {
-                                                                    "kind": "Listing",
-                                                                    "data": {
-                                                                        "after": null,
-                                                                        "whitelist_status": "all_ads",
-                                                                        "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                        "dist": null,
-                                                                        "children": [
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "text",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "t1",
-                                                                                                    "data": {
-                                                                                                        "subreddit_id": "t5_2qh4j",
-                                                                                                        "approved_at_utc": null,
-                                                                                                        "mod_reason_by": null,
-                                                                                                        "banned_by": null,
-                                                                                                        "author_flair_type": "text",
-                                                                                                        "removal_reason": null,
-                                                                                                        "link_id": "t3_7q3wr0",
-                                                                                                        "likes": null,
-                                                                                                        "replies": {
-                                                                                                            "kind": "Listing",
-                                                                                                            "data": {
-                                                                                                                "after": null,
-                                                                                                                "whitelist_status": "all_ads",
-                                                                                                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                "dist": null,
-                                                                                                                "children": [
-                                                                                                                    {
-                                                                                                                        "kind": "more",
-                                                                                                                        "data": {
-                                                                                                                            "count": 2,
-                                                                                                                            "name": "t1_dsmd5ra",
-                                                                                                                            "id": "dsmd5ra",
-                                                                                                                            "parent_id": "t1_dsm9pbz",
-                                                                                                                            "depth": 5,
-                                                                                                                            "children": [
-                                                                                                                                "dsmd5ra"
-                                                                                                                            ]
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "before": null
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "user_reports": [],
-                                                                                                        "saved": false,
-                                                                                                        "id": "dsm9pbz",
-                                                                                                        "banned_at_utc": null,
-                                                                                                        "mod_reason_title": null,
-                                                                                                        "gilded": 0,
-                                                                                                        "archived": false,
-                                                                                                        "report_reasons": null,
-                                                                                                        "author": "Tankfranker",
-                                                                                                        "can_mod_post": false,
-                                                                                                        "ups": 14,
-                                                                                                        "parent_id": "t1_dsm9i4m",
-                                                                                                        "score": 14,
-                                                                                                        "approved_by": null,
-                                                                                                        "downs": 0,
-                                                                                                        "body": "We need to invade the North Sea, that will show em!! ",
-                                                                                                        "edited": false,
-                                                                                                        "author_flair_css_class": null,
-                                                                                                        "collapsed": false,
-                                                                                                        "author_flair_richtext": [],
-                                                                                                        "is_submitter": false,
-                                                                                                        "collapsed_reason": null,
-                                                                                                        "body_html": "<div class=\"md\"><p>We need to invade the North Sea, that will show em!! </p>\n</div>",
-                                                                                                        "stickied": false,
-                                                                                                        "subreddit_type": "public",
-                                                                                                        "can_gild": true,
-                                                                                                        "subreddit": "europe",
-                                                                                                        "author_flair_text_color": null,
-                                                                                                        "score_hidden": false,
-                                                                                                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9pbz/",
-                                                                                                        "num_reports": null,
-                                                                                                        "name": "t1_dsm9pbz",
-                                                                                                        "created": 1515879022,
-                                                                                                        "author_flair_text": null,
-                                                                                                        "rte_mode": "markdown",
-                                                                                                        "created_utc": 1515850222,
-                                                                                                        "subreddit_name_prefixed": "r/europe",
-                                                                                                        "controversiality": 0,
-                                                                                                        "depth": 4,
-                                                                                                        "author_flair_background_color": null,
-                                                                                                        "mod_reports": [],
-                                                                                                        "mod_note": null,
-                                                                                                        "distinguished": null
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsm9i4m",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "Sleek_",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 29,
-                                                                                    "parent_id": "t1_dsm8m3p",
-                                                                                    "score": 29,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "Let's build a dam, a big beautiful dam ! And we will call it Waterdam !\n\nAnd North sea will pay for it !",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": null,
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>Let&#39;s build a dam, a big beautiful dam ! And we will call it Waterdam !</p>\n\n<p>And North sea will pay for it !</p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9i4m/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsm9i4m",
-                                                                                    "created": 1515878610,
-                                                                                    "author_flair_text": null,
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515849810,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "kind": "more",
-                                                                                "data": {
-                                                                                    "count": 2,
-                                                                                    "name": "t1_dsmfsf7",
-                                                                                    "id": "dsmfsf7",
-                                                                                    "parent_id": "t1_dsm8m3p",
-                                                                                    "depth": 3,
-                                                                                    "children": [
-                                                                                        "dsmfsf7"
-                                                                                    ]
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "before": null
-                                                                    }
-                                                                },
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsm8m3p",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "Tankfranker",
-                                                                "can_mod_post": false,
-                                                                "ups": 49,
-                                                                "parent_id": "t1_dsm8i97",
-                                                                "score": 49,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "Water is our national enemy, those bloody bodies of water trying to invade our lands! ",
-                                                                "edited": false,
-                                                                "author_flair_css_class": null,
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>Water is our national enemy, those bloody bodies of water trying to invade our lands! </p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": null,
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm8m3p/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsm8m3p",
-                                                                "created": 1515876612,
-                                                                "author_flair_text": null,
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515847812,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": null,
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        },
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "richtext",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": "",
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsm9czq",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "itsgonnabeanofromme",
-                                                                "can_mod_post": false,
-                                                                "ups": 7,
-                                                                "parent_id": "t1_dsm8i97",
-                                                                "score": 7,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "And making Poseidon pay for it. ",
-                                                                "edited": false,
-                                                                "author_flair_css_class": "NETH",
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [
-                                                                    {
-                                                                        "e": "text",
-                                                                        "t": "The Netherlands"
-                                                                    }
-                                                                ],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>And making Poseidon pay for it. </p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": null,
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9czq/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsm9czq",
-                                                                "created": 1515878303,
-                                                                "author_flair_text": "The Netherlands",
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515849503,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": null,
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm8i97",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Sleek_",
-                                            "can_mod_post": false,
-                                            "ups": 68,
-                                            "parent_id": "t1_dsm6zjo",
-                                            "score": 68,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Drain the swamp !",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Drain the swamp !</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm8i97/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm8i97",
-                                            "created": 1515876354,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515847554,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "richtext",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": "",
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsmbcfa",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Rediwed",
-                                            "can_mod_post": false,
-                                            "ups": 10,
-                                            "parent_id": "t1_dsm6zjo",
-                                            "score": 10,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Land is like time, if you don't have enough of it you should create more!",
-                                            "edited": false,
-                                            "author_flair_css_class": "NETH",
-                                            "collapsed": false,
-                                            "author_flair_richtext": [
-                                                {
-                                                    "e": "text",
-                                                    "t": "The Netherlands"
-                                                }
-                                            ],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Land is like time, if you don&#39;t have enough of it you should create more!</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmbcfa/",
-                                            "num_reports": null,
-                                            "name": "t1_dsmbcfa",
-                                            "created": 1515882080,
-                                            "author_flair_text": "The Netherlands",
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515853280,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 4,
-                                            "name": "t1_dsmhwma",
-                                            "id": "dsmhwma",
-                                            "parent_id": "t1_dsm6zjo",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmhwma",
-                                                "dsmc2rg"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm6zjo",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Historyissuper",
-                        "can_mod_post": false,
-                        "ups": 187,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 187,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "I just see the poor water being massacred in Netherlands",
-                        "edited": false,
-                        "author_flair_css_class": "MRVA",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Moravia (Czech Rep.)"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>I just see the poor water being massacred in Netherlands</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm6zjo/",
-                        "num_reports": null,
-                        "name": "t1_dsm6zjo",
-                        "created": 1515872441,
-                        "author_flair_text": "Moravia (Czech Rep.)",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515843641,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "text",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": {
-                                                                    "kind": "Listing",
-                                                                    "data": {
-                                                                        "after": null,
-                                                                        "whitelist_status": "all_ads",
-                                                                        "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                        "dist": null,
-                                                                        "children": [
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "text",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "more",
-                                                                                                    "data": {
-                                                                                                        "count": 3,
-                                                                                                        "name": "t1_dsm9q54",
-                                                                                                        "id": "dsm9q54",
-                                                                                                        "parent_id": "t1_dsm7n0l",
-                                                                                                        "depth": 4,
-                                                                                                        "children": [
-                                                                                                            "dsm9q54",
-                                                                                                            "dsmuoh0"
-                                                                                                        ]
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsm7n0l",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "JFokkeC",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 7,
-                                                                                    "parent_id": "t1_dsm7kxg",
-                                                                                    "score": 7,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "I think it is, I once googled it, betonstop can't come soon enough, the whole country is turning into a suburb",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": null,
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>I think it is, I once googled it, betonstop can&#39;t come soon enough, the whole country is turning into a suburb</p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7n0l/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsm7n0l",
-                                                                                    "created": 1515874169,
-                                                                                    "author_flair_text": null,
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515845369,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "kind": "more",
-                                                                                "data": {
-                                                                                    "count": 3,
-                                                                                    "name": "t1_dsm8awr",
-                                                                                    "id": "dsm8awr",
-                                                                                    "parent_id": "t1_dsm7kxg",
-                                                                                    "depth": 3,
-                                                                                    "children": [
-                                                                                        "dsm8awr"
-                                                                                    ]
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "before": null
-                                                                    }
-                                                                },
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsm7kxg",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "SumRegaliss",
-                                                                "can_mod_post": false,
-                                                                "ups": 12,
-                                                                "parent_id": "t1_dsm7icl",
-                                                                "score": 12,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "Is that the proper English translation of 'lintbebouwing'? I've always wondered how to say that in English. Damn Belgian ribbon building :( It's a disgrace.",
-                                                                "edited": false,
-                                                                "author_flair_css_class": null,
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>Is that the proper English translation of &#39;lintbebouwing&#39;? I&#39;ve always wondered how to say that in English. Damn Belgian ribbon building :( It&#39;s a disgrace.</p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": null,
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7kxg/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsm7kxg",
-                                                                "created": 1515874022,
-                                                                "author_flair_text": null,
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515845222,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": null,
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm7icl",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "JFokkeC",
-                                            "can_mod_post": false,
-                                            "ups": 24,
-                                            "parent_id": "t1_dsm6wps",
-                                            "score": 24,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "The vegetation is still there, its just hidden behind the ribbon building x(",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>The vegetation is still there, its just hidden behind the ribbon building x(</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7icl/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm7icl",
-                                            "created": 1515873830,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515845030,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 12,
-                                            "name": "t1_dsmf068",
-                                            "id": "dsmf068",
-                                            "parent_id": "t1_dsm6wps",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmf068",
-                                                "dsnugz5",
-                                                "dsmfe42",
-                                                "dsm8umb",
-                                                "dsm85xx"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm6wps",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "SumRegaliss",
-                        "can_mod_post": false,
-                        "ups": 66,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 66,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "Belgium just got more and more towns and less and less vegitation. Why am I not surprised. Damnit Belgium.",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>Belgium just got more and more towns and less and less vegitation. Why am I not surprised. Damnit Belgium.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm6wps/",
-                        "num_reports": null,
-                        "name": "t1_dsm6wps",
-                        "created": 1515872230,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515843430,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "richtext",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "richtext",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": {
-                                                                    "kind": "Listing",
-                                                                    "data": {
-                                                                        "after": null,
-                                                                        "whitelist_status": "all_ads",
-                                                                        "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                        "dist": null,
-                                                                        "children": [
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "richtext",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "t1",
-                                                                                                    "data": {
-                                                                                                        "subreddit_id": "t5_2qh4j",
-                                                                                                        "approved_at_utc": null,
-                                                                                                        "mod_reason_by": null,
-                                                                                                        "banned_by": null,
-                                                                                                        "author_flair_type": "richtext",
-                                                                                                        "removal_reason": null,
-                                                                                                        "link_id": "t3_7q3wr0",
-                                                                                                        "likes": null,
-                                                                                                        "replies": {
-                                                                                                            "kind": "Listing",
-                                                                                                            "data": {
-                                                                                                                "after": null,
-                                                                                                                "whitelist_status": "all_ads",
-                                                                                                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                "dist": null,
-                                                                                                                "children": [
-                                                                                                                    {
-                                                                                                                        "kind": "t1",
-                                                                                                                        "data": {
-                                                                                                                            "subreddit_id": "t5_2qh4j",
-                                                                                                                            "approved_at_utc": null,
-                                                                                                                            "mod_reason_by": null,
-                                                                                                                            "banned_by": null,
-                                                                                                                            "author_flair_type": "richtext",
-                                                                                                                            "removal_reason": null,
-                                                                                                                            "link_id": "t3_7q3wr0",
-                                                                                                                            "likes": null,
-                                                                                                                            "replies": {
-                                                                                                                                "kind": "Listing",
-                                                                                                                                "data": {
-                                                                                                                                    "after": null,
-                                                                                                                                    "whitelist_status": "all_ads",
-                                                                                                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                                                                    "dist": null,
-                                                                                                                                    "children": [
-                                                                                                                                        {
-                                                                                                                                            "kind": "t1",
-                                                                                                                                            "data": {
-                                                                                                                                                "subreddit_id": "t5_2qh4j",
-                                                                                                                                                "approved_at_utc": null,
-                                                                                                                                                "mod_reason_by": null,
-                                                                                                                                                "banned_by": null,
-                                                                                                                                                "author_flair_type": "richtext",
-                                                                                                                                                "removal_reason": null,
-                                                                                                                                                "link_id": "t3_7q3wr0",
-                                                                                                                                                "likes": null,
-                                                                                                                                                "replies": "",
-                                                                                                                                                "user_reports": [],
-                                                                                                                                                "saved": false,
-                                                                                                                                                "id": "dsmidqn",
-                                                                                                                                                "banned_at_utc": null,
-                                                                                                                                                "mod_reason_title": null,
-                                                                                                                                                "gilded": 0,
-                                                                                                                                                "archived": false,
-                                                                                                                                                "report_reasons": null,
-                                                                                                                                                "author": "harassercat",
-                                                                                                                                                "can_mod_post": false,
-                                                                                                                                                "ups": 7,
-                                                                                                                                                "parent_id": "t1_dsmesdn",
-                                                                                                                                                "score": 7,
-                                                                                                                                                "approved_by": null,
-                                                                                                                                                "downs": 0,
-                                                                                                                                                "body": "About 1.3 - 1.5% (growing slowly), but anyway you're right.",
-                                                                                                                                                "edited": false,
-                                                                                                                                                "author_flair_css_class": "ICEL",
-                                                                                                                                                "collapsed": false,
-                                                                                                                                                "author_flair_richtext": [
-                                                                                                                                                    {
-                                                                                                                                                        "e": "text",
-                                                                                                                                                        "t": "Iceland"
-                                                                                                                                                    }
-                                                                                                                                                ],
-                                                                                                                                                "is_submitter": false,
-                                                                                                                                                "collapsed_reason": null,
-                                                                                                                                                "body_html": "<div class=\"md\"><p>About 1.3 - 1.5% (growing slowly), but anyway you&#39;re right.</p>\n</div>",
-                                                                                                                                                "stickied": false,
-                                                                                                                                                "subreddit_type": "public",
-                                                                                                                                                "can_gild": true,
-                                                                                                                                                "subreddit": "europe",
-                                                                                                                                                "author_flair_text_color": null,
-                                                                                                                                                "score_hidden": false,
-                                                                                                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmidqn/",
-                                                                                                                                                "num_reports": null,
-                                                                                                                                                "name": "t1_dsmidqn",
-                                                                                                                                                "created": 1515891798,
-                                                                                                                                                "author_flair_text": "Iceland",
-                                                                                                                                                "rte_mode": "markdown",
-                                                                                                                                                "created_utc": 1515862998,
-                                                                                                                                                "subreddit_name_prefixed": "r/europe",
-                                                                                                                                                "controversiality": 0,
-                                                                                                                                                "depth": 6,
-                                                                                                                                                "author_flair_background_color": null,
-                                                                                                                                                "mod_reports": [],
-                                                                                                                                                "mod_note": null,
-                                                                                                                                                "distinguished": null
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    ],
-                                                                                                                                    "before": null
-                                                                                                                                }
-                                                                                                                            },
-                                                                                                                            "user_reports": [],
-                                                                                                                            "saved": false,
-                                                                                                                            "id": "dsmesdn",
-                                                                                                                            "banned_at_utc": null,
-                                                                                                                            "mod_reason_title": null,
-                                                                                                                            "gilded": 0,
-                                                                                                                            "archived": false,
-                                                                                                                            "report_reasons": null,
-                                                                                                                            "author": "blubb444",
-                                                                                                                            "can_mod_post": false,
-                                                                                                                            "ups": 15,
-                                                                                                                            "parent_id": "t1_dsme1ft",
-                                                                                                                            "score": 15,
-                                                                                                                            "approved_by": null,
-                                                                                                                            "downs": 0,
-                                                                                                                            "body": "Eh, relatively spoken I'd say it is, because right now it's likely less than 1%",
-                                                                                                                            "edited": false,
-                                                                                                                            "author_flair_css_class": "GERM",
-                                                                                                                            "collapsed": false,
-                                                                                                                            "author_flair_richtext": [
-                                                                                                                                {
-                                                                                                                                    "e": "text",
-                                                                                                                                    "t": "Germany"
-                                                                                                                                }
-                                                                                                                            ],
-                                                                                                                            "is_submitter": false,
-                                                                                                                            "collapsed_reason": null,
-                                                                                                                            "body_html": "<div class=\"md\"><p>Eh, relatively spoken I&#39;d say it is, because right now it&#39;s likely less than 1%</p>\n</div>",
-                                                                                                                            "stickied": false,
-                                                                                                                            "subreddit_type": "public",
-                                                                                                                            "can_gild": true,
-                                                                                                                            "subreddit": "europe",
-                                                                                                                            "author_flair_text_color": null,
-                                                                                                                            "score_hidden": false,
-                                                                                                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmesdn/",
-                                                                                                                            "num_reports": null,
-                                                                                                                            "name": "t1_dsmesdn",
-                                                                                                                            "created": 1515887302,
-                                                                                                                            "author_flair_text": "Germany",
-                                                                                                                            "rte_mode": "markdown",
-                                                                                                                            "created_utc": 1515858502,
-                                                                                                                            "subreddit_name_prefixed": "r/europe",
-                                                                                                                            "controversiality": 0,
-                                                                                                                            "depth": 5,
-                                                                                                                            "author_flair_background_color": null,
-                                                                                                                            "mod_reports": [],
-                                                                                                                            "mod_note": null,
-                                                                                                                            "distinguished": null
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "before": null
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "user_reports": [],
-                                                                                                        "saved": false,
-                                                                                                        "id": "dsme1ft",
-                                                                                                        "banned_at_utc": null,
-                                                                                                        "mod_reason_title": null,
-                                                                                                        "gilded": 0,
-                                                                                                        "archived": false,
-                                                                                                        "report_reasons": null,
-                                                                                                        "author": "Steinson",
-                                                                                                        "can_mod_post": false,
-                                                                                                        "ups": 9,
-                                                                                                        "parent_id": "t1_dsmd33l",
-                                                                                                        "score": 9,
-                                                                                                        "approved_by": null,
-                                                                                                        "downs": 0,
-                                                                                                        "body": "That’s still not very much",
-                                                                                                        "edited": false,
-                                                                                                        "author_flair_css_class": "SWED",
-                                                                                                        "collapsed": false,
-                                                                                                        "author_flair_richtext": [
-                                                                                                            {
-                                                                                                                "e": "text",
-                                                                                                                "t": "Sweden"
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "is_submitter": false,
-                                                                                                        "collapsed_reason": null,
-                                                                                                        "body_html": "<div class=\"md\"><p>That’s still not very much</p>\n</div>",
-                                                                                                        "stickied": false,
-                                                                                                        "subreddit_type": "public",
-                                                                                                        "can_gild": true,
-                                                                                                        "subreddit": "europe",
-                                                                                                        "author_flair_text_color": "dark",
-                                                                                                        "score_hidden": false,
-                                                                                                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsme1ft/",
-                                                                                                        "num_reports": null,
-                                                                                                        "name": "t1_dsme1ft",
-                                                                                                        "created": 1515886277,
-                                                                                                        "author_flair_text": "Sweden",
-                                                                                                        "rte_mode": "markdown",
-                                                                                                        "created_utc": 1515857477,
-                                                                                                        "subreddit_name_prefixed": "r/europe",
-                                                                                                        "controversiality": 0,
-                                                                                                        "depth": 4,
-                                                                                                        "author_flair_background_color": "",
-                                                                                                        "mod_reports": [],
-                                                                                                        "mod_note": null,
-                                                                                                        "distinguished": null
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsmd33l",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "blubb444",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 21,
-                                                                                    "parent_id": "t1_dsmcdlo",
-                                                                                    "score": 21,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "Before it was settled, it's assumed that it was actually covered by forests up to 25%. ",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": "GERM",
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [
-                                                                                        {
-                                                                                            "e": "text",
-                                                                                            "t": "Germany"
-                                                                                        }
-                                                                                    ],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>Before it was settled, it&#39;s assumed that it was actually covered by forests up to 25%. </p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmd33l/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsmd33l",
-                                                                                    "created": 1515884887,
-                                                                                    "author_flair_text": "Germany",
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515856087,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "kind": "t1",
-                                                                                "data": {
-                                                                                    "subreddit_id": "t5_2qh4j",
-                                                                                    "approved_at_utc": null,
-                                                                                    "mod_reason_by": null,
-                                                                                    "banned_by": null,
-                                                                                    "author_flair_type": "richtext",
-                                                                                    "removal_reason": null,
-                                                                                    "link_id": "t3_7q3wr0",
-                                                                                    "likes": null,
-                                                                                    "replies": {
-                                                                                        "kind": "Listing",
-                                                                                        "data": {
-                                                                                            "after": null,
-                                                                                            "whitelist_status": "all_ads",
-                                                                                            "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                                            "dist": null,
-                                                                                            "children": [
-                                                                                                {
-                                                                                                    "kind": "more",
-                                                                                                    "data": {
-                                                                                                        "count": 2,
-                                                                                                        "name": "t1_dsmxh1x",
-                                                                                                        "id": "dsmxh1x",
-                                                                                                        "parent_id": "t1_dsmiavn",
-                                                                                                        "depth": 4,
-                                                                                                        "children": [
-                                                                                                            "dsmxh1x"
-                                                                                                        ]
-                                                                                                    }
-                                                                                                }
-                                                                                            ],
-                                                                                            "before": null
-                                                                                        }
-                                                                                    },
-                                                                                    "user_reports": [],
-                                                                                    "saved": false,
-                                                                                    "id": "dsmiavn",
-                                                                                    "banned_at_utc": null,
-                                                                                    "mod_reason_title": null,
-                                                                                    "gilded": 0,
-                                                                                    "archived": false,
-                                                                                    "report_reasons": null,
-                                                                                    "author": "harassercat",
-                                                                                    "can_mod_post": false,
-                                                                                    "ups": 10,
-                                                                                    "parent_id": "t1_dsmcdlo",
-                                                                                    "score": 10,
-                                                                                    "approved_by": null,
-                                                                                    "downs": 0,
-                                                                                    "body": "That's false, Iceland can grow trees just fine. The country is deforested for the same historical reason as other countries: farming, specifically very extensive pastoral farming.",
-                                                                                    "edited": false,
-                                                                                    "author_flair_css_class": "ICEL",
-                                                                                    "collapsed": false,
-                                                                                    "author_flair_richtext": [
-                                                                                        {
-                                                                                            "e": "text",
-                                                                                            "t": "Iceland"
-                                                                                        }
-                                                                                    ],
-                                                                                    "is_submitter": false,
-                                                                                    "collapsed_reason": null,
-                                                                                    "body_html": "<div class=\"md\"><p>That&#39;s false, Iceland can grow trees just fine. The country is deforested for the same historical reason as other countries: farming, specifically very extensive pastoral farming.</p>\n</div>",
-                                                                                    "stickied": false,
-                                                                                    "subreddit_type": "public",
-                                                                                    "can_gild": true,
-                                                                                    "subreddit": "europe",
-                                                                                    "author_flair_text_color": null,
-                                                                                    "score_hidden": false,
-                                                                                    "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmiavn/",
-                                                                                    "num_reports": null,
-                                                                                    "name": "t1_dsmiavn",
-                                                                                    "created": 1515891702,
-                                                                                    "author_flair_text": "Iceland",
-                                                                                    "rte_mode": "markdown",
-                                                                                    "created_utc": 1515862902,
-                                                                                    "subreddit_name_prefixed": "r/europe",
-                                                                                    "controversiality": 0,
-                                                                                    "depth": 3,
-                                                                                    "author_flair_background_color": null,
-                                                                                    "mod_reports": [],
-                                                                                    "mod_note": null,
-                                                                                    "distinguished": null
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "before": null
-                                                                    }
-                                                                },
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsmcdlo",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "Steinson",
-                                                                "can_mod_post": false,
-                                                                "ups": 20,
-                                                                "parent_id": "t1_dsmc6zq",
-                                                                "score": 20,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "And Iceland can barely even grow trees, so they don’t really count",
-                                                                "edited": false,
-                                                                "author_flair_css_class": "SWED",
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [
-                                                                    {
-                                                                        "e": "text",
-                                                                        "t": "Sweden"
-                                                                    }
-                                                                ],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>And Iceland can barely even grow trees, so they don’t really count</p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": "dark",
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmcdlo/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsmcdlo",
-                                                                "created": 1515883786,
-                                                                "author_flair_text": "Sweden",
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515854986,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": "",
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        },
-                                                        {
-                                                            "kind": "more",
-                                                            "data": {
-                                                                "count": 7,
-                                                                "name": "t1_dsmxqw2",
-                                                                "id": "dsmxqw2",
-                                                                "parent_id": "t1_dsmc6zq",
-                                                                "depth": 2,
-                                                                "children": [
-                                                                    "dsmxqw2",
-                                                                    "dsmx267"
-                                                                ]
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsmc6zq",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Halbaras",
-                                            "can_mod_post": false,
-                                            "ups": 28,
-                                            "parent_id": "t1_dsm9qyu",
-                                            "score": 28,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Sadly, Britain is still one of the most deforested places in Europe even with the plantations. Only the Netherlands, Iceland and Ireland beat us. ",
-                                            "edited": false,
-                                            "author_flair_css_class": "SCOT",
-                                            "collapsed": false,
-                                            "author_flair_richtext": [
-                                                {
-                                                    "e": "text",
-                                                    "t": "Make Sealand Great Again!"
-                                                }
-                                            ],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Sadly, Britain is still one of the most deforested places in Europe even with the plantations. Only the Netherlands, Iceland and Ireland beat us. </p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmc6zq/",
-                                            "num_reports": null,
-                                            "name": "t1_dsmc6zq",
-                                            "created": 1515883492,
-                                            "author_flair_text": "Make Sealand Great Again!",
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515854692,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 4,
-                                            "name": "t1_dsm9wny",
-                                            "id": "dsm9wny",
-                                            "parent_id": "t1_dsm9qyu",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsm9wny",
-                                                "dsmc89j"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm9qyu",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "rascar26",
-                        "can_mod_post": false,
-                        "ups": 51,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 51,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "In a UK context, most of that growth is from conifer plantations, which from a ecological point of view are far less biodiverse than older growth forests (generally oak and beech woodland in England and Scots pine forest in Scotland).\n\nIt's better than nothing, and conifer planatations that used to be ancient woodland can be reverted over time as they will still hold more woodland plants than arable fields.",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>In a UK context, most of that growth is from conifer plantations, which from a ecological point of view are far less biodiverse than older growth forests (generally oak and beech woodland in England and Scots pine forest in Scotland).</p>\n\n<p>It&#39;s better than nothing, and conifer planatations that used to be ancient woodland can be reverted over time as they will still hold more woodland plants than arable fields.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9qyu/",
-                        "num_reports": null,
-                        "name": "t1_dsm9qyu",
-                        "created": 1515879116,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515850316,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "richtext",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": "",
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsmdxsz",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "McDutchy",
-                                                                "can_mod_post": false,
-                                                                "ups": 8,
-                                                                "parent_id": "t1_dsmdc1m",
-                                                                "score": 8,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "The problem is the scale of the forest fires and the arid conditions. The ecosystems might not get time to recover. Small controllable forest fires indeed do generally bring benefits in the longer term.",
-                                                                "edited": false,
-                                                                "author_flair_css_class": "NETH",
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [
-                                                                    {
-                                                                        "e": "text",
-                                                                        "t": "The Netherlands"
-                                                                    }
-                                                                ],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>The problem is the scale of the forest fires and the arid conditions. The ecosystems might not get time to recover. Small controllable forest fires indeed do generally bring benefits in the longer term.</p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": null,
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmdxsz/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsmdxsz",
-                                                                "created": 1515886135,
-                                                                "author_flair_text": "The Netherlands",
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515857335,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": null,
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        },
-                                                        {
-                                                            "kind": "more",
-                                                            "data": {
-                                                                "count": 3,
-                                                                "name": "t1_dsmf42u",
-                                                                "id": "dsmf42u",
-                                                                "parent_id": "t1_dsmdc1m",
-                                                                "depth": 2,
-                                                                "children": [
-                                                                    "dsmf42u",
-                                                                    "dsmdpav"
-                                                                ]
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsmdc1m",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Craishton",
-                                            "can_mod_post": false,
-                                            "ups": 12,
-                                            "parent_id": "t1_dsm7ta5",
-                                            "score": 12,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Well, forest fires can be good for the long term health of the forest.",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Well, forest fires can be good for the long term health of the forest.</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmdc1m/",
-                                            "num_reports": null,
-                                            "name": "t1_dsmdc1m",
-                                            "created": 1515885259,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515856459,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": "",
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm8ky5",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Sleek_",
-                                            "can_mod_post": false,
-                                            "ups": 17,
-                                            "parent_id": "t1_dsm7ta5",
-                                            "score": 17,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "Condoleances for your loss of lives and forests.",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>Condoleances for your loss of lives and forests.</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm8ky5/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm8ky5",
-                                            "created": 1515876535,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515847735,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 3,
-                                            "name": "t1_dsmeuo8",
-                                            "id": "dsmeuo8",
-                                            "parent_id": "t1_dsm7ta5",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmeuo8"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm7ta5",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "PedsBeast",
-                        "can_mod_post": false,
-                        "ups": 27,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 27,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "Well, not last year for us. FeelsBadMan",
-                        "edited": false,
-                        "author_flair_css_class": "PORT",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Portugal"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>Well, not last year for us. FeelsBadMan</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7ta5/",
-                        "num_reports": null,
-                        "name": "t1_dsm7ta5",
-                        "created": 1515874623,
-                        "author_flair_text": "Portugal",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515845823,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "richtext",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": {
-                                                "kind": "Listing",
-                                                "data": {
-                                                    "after": null,
-                                                    "whitelist_status": "all_ads",
-                                                    "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                    "dist": null,
-                                                    "children": [
-                                                        {
-                                                            "kind": "t1",
-                                                            "data": {
-                                                                "subreddit_id": "t5_2qh4j",
-                                                                "approved_at_utc": null,
-                                                                "mod_reason_by": null,
-                                                                "banned_by": null,
-                                                                "author_flair_type": "richtext",
-                                                                "removal_reason": null,
-                                                                "link_id": "t3_7q3wr0",
-                                                                "likes": null,
-                                                                "replies": {
-                                                                    "kind": "Listing",
-                                                                    "data": {
-                                                                        "after": null,
-                                                                        "whitelist_status": "all_ads",
-                                                                        "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                                                        "dist": null,
-                                                                        "children": [
-                                                                            {
-                                                                                "kind": "more",
-                                                                                "data": {
-                                                                                    "count": 3,
-                                                                                    "name": "t1_dsmxw50",
-                                                                                    "id": "dsmxw50",
-                                                                                    "parent_id": "t1_dsmexmr",
-                                                                                    "depth": 3,
-                                                                                    "children": [
-                                                                                        "dsmxw50"
-                                                                                    ]
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "before": null
-                                                                    }
-                                                                },
-                                                                "user_reports": [],
-                                                                "saved": false,
-                                                                "id": "dsmexmr",
-                                                                "banned_at_utc": null,
-                                                                "mod_reason_title": null,
-                                                                "gilded": 0,
-                                                                "archived": false,
-                                                                "report_reasons": null,
-                                                                "author": "NegroDeLanusEnLorena",
-                                                                "can_mod_post": false,
-                                                                "ups": 9,
-                                                                "parent_id": "t1_dsm972f",
-                                                                "score": 9,
-                                                                "approved_by": null,
-                                                                "downs": 0,
-                                                                "body": "So celts started deforestation? ",
-                                                                "edited": false,
-                                                                "author_flair_css_class": "FR-LORR",
-                                                                "collapsed": false,
-                                                                "author_flair_richtext": [
-                                                                    {
-                                                                        "e": "text",
-                                                                        "t": "Lorraine (France)"
-                                                                    }
-                                                                ],
-                                                                "is_submitter": false,
-                                                                "collapsed_reason": null,
-                                                                "body_html": "<div class=\"md\"><p>So celts started deforestation? </p>\n</div>",
-                                                                "stickied": false,
-                                                                "subreddit_type": "public",
-                                                                "can_gild": true,
-                                                                "subreddit": "europe",
-                                                                "author_flair_text_color": "dark",
-                                                                "score_hidden": false,
-                                                                "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmexmr/",
-                                                                "num_reports": null,
-                                                                "name": "t1_dsmexmr",
-                                                                "created": 1515887497,
-                                                                "author_flair_text": "Lorraine (France)",
-                                                                "rte_mode": "markdown",
-                                                                "created_utc": 1515858697,
-                                                                "subreddit_name_prefixed": "r/europe",
-                                                                "controversiality": 0,
-                                                                "depth": 2,
-                                                                "author_flair_background_color": "",
-                                                                "mod_reports": [],
-                                                                "mod_note": null,
-                                                                "distinguished": null
-                                                            }
-                                                        }
-                                                    ],
-                                                    "before": null
-                                                }
-                                            },
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm972f",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "Airstuff",
-                                            "can_mod_post": false,
-                                            "ups": 29,
-                                            "parent_id": "t1_dsm80hj",
-                                            "score": 29,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "France nowadays has more trees than during the roman conquest !",
-                                            "edited": false,
-                                            "author_flair_css_class": "EURO",
-                                            "collapsed": false,
-                                            "author_flair_richtext": [
-                                                {
-                                                    "e": "text",
-                                                    "t": "Europe"
-                                                }
-                                            ],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>France nowadays has more trees than during the roman conquest !</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": "light",
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm972f/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm972f",
-                                            "created": 1515877949,
-                                            "author_flair_text": "Europe",
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515849149,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": "#003399",
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 1,
-                                            "name": "t1_dsm8xyl",
-                                            "id": "dsm8xyl",
-                                            "parent_id": "t1_dsm80hj",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsm8xyl"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm80hj",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Volesprit31",
-                        "can_mod_post": false,
-                        "ups": 24,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 24,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "I learnt that during the middle ages, France was just a huge field. That's nice to see it growing back!",
-                        "edited": false,
-                        "author_flair_css_class": "FR-RHAL",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Rhône-Alpes (France)"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>I learnt that during the middle ages, France was just a huge field. That&#39;s nice to see it growing back!</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm80hj/",
-                        "num_reports": null,
-                        "name": "t1_dsm80hj",
-                        "created": 1515875134,
-                        "author_flair_text": "Rhône-Alpes (France)",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515846334,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": "",
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm71g7",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "zzzzzzzzzzzzzzzzspaf",
-                        "can_mod_post": false,
-                        "ups": 37,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 37,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "that's a really intresting gif\n\n[direct link to the gif for the lazy](https://img.washingtonpost.com/pbox.php?url=https://www.washingtonpost.com/blogs/worldviews/files/2014/12/land-changes-1900-2010-forward_50perc_res.gif&op=noop)\n",
-                        "edited": false,
-                        "author_flair_css_class": "BELG",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Belgium"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>that&#39;s a really intresting gif</p>\n\n<p><a href=\"https://img.washingtonpost.com/pbox.php?url=https://www.washingtonpost.com/blogs/worldviews/files/2014/12/land-changes-1900-2010-forward_50perc_res.gif&amp;op=noop\">direct link to the gif for the lazy</a></p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm71g7/",
-                        "num_reports": null,
-                        "name": "t1_dsm71g7",
-                        "created": 1515872586,
-                        "author_flair_text": "Belgium",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515843786,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "text",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": "",
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsm80ti",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "PrincipledProphet",
-                                            "can_mod_post": false,
-                                            "ups": 31,
-                                            "parent_id": "t1_dsm7cmq",
-                                            "score": 31,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "But that ikea furniture tho",
-                                            "edited": false,
-                                            "author_flair_css_class": null,
-                                            "collapsed": false,
-                                            "author_flair_richtext": [],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>But that ikea furniture tho</p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm80ti/",
-                                            "num_reports": null,
-                                            "name": "t1_dsm80ti",
-                                            "created": 1515875158,
-                                            "author_flair_text": null,
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515846358,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 3,
-                                            "name": "t1_dsm8v1d",
-                                            "id": "dsm8v1d",
-                                            "parent_id": "t1_dsm7cmq",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsm8v1d"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm7cmq",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Yrvaa",
-                        "can_mod_post": false,
-                        "ups": 27,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 27,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "Except for Romania. where rampart theft, corruption and illegal cutting has seemed destroy the forest for most part.",
-                        "edited": false,
-                        "author_flair_css_class": "EURO",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Europe"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>Except for Romania. where rampart theft, corruption and illegal cutting has seemed destroy the forest for most part.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm7cmq/",
-                        "num_reports": null,
-                        "name": "t1_dsm7cmq",
-                        "created": 1515873416,
-                        "author_flair_text": "Europe",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515844616,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 1,
-                                            "name": "t1_dsmk9m2",
-                                            "id": "dsmk9m2",
-                                            "parent_id": "t1_dsmayxe",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmk9m2"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsmayxe",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "flarpblarp",
-                        "can_mod_post": false,
-                        "ups": 12,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 12,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "I was unaware that forest coverage had actually been increasing. \n\nDoes anyone know about the quality of these forests though? Is the newer growth all uniformly planted for logging, or are we getting back forests that can support a greater biodiversity?",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>I was unaware that forest coverage had actually been increasing. </p>\n\n<p>Does anyone know about the quality of these forests though? Is the newer growth all uniformly planted for logging, or are we getting back forests that can support a greater biodiversity?</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmayxe/",
-                        "num_reports": null,
-                        "name": "t1_dsmayxe",
-                        "created": 1515881428,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515852628,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "t1",
-                                        "data": {
-                                            "subreddit_id": "t5_2qh4j",
-                                            "approved_at_utc": null,
-                                            "mod_reason_by": null,
-                                            "banned_by": null,
-                                            "author_flair_type": "richtext",
-                                            "removal_reason": null,
-                                            "link_id": "t3_7q3wr0",
-                                            "likes": null,
-                                            "replies": "",
-                                            "user_reports": [],
-                                            "saved": false,
-                                            "id": "dsmov9p",
-                                            "banned_at_utc": null,
-                                            "mod_reason_title": null,
-                                            "gilded": 0,
-                                            "archived": false,
-                                            "report_reasons": null,
-                                            "author": "4_5_6",
-                                            "can_mod_post": false,
-                                            "ups": 13,
-                                            "parent_id": "t1_dsm9440",
-                                            "score": 13,
-                                            "approved_by": null,
-                                            "downs": 0,
-                                            "body": "I'd say it's emptier today in the sense that areas that used to have large rural populations are now empty due to the growth of cities. ",
-                                            "edited": false,
-                                            "author_flair_css_class": "IREL",
-                                            "collapsed": false,
-                                            "author_flair_richtext": [
-                                                {
-                                                    "e": "text",
-                                                    "t": "Ireland"
-                                                }
-                                            ],
-                                            "is_submitter": false,
-                                            "collapsed_reason": null,
-                                            "body_html": "<div class=\"md\"><p>I&#39;d say it&#39;s emptier today in the sense that areas that used to have large rural populations are now empty due to the growth of cities. </p>\n</div>",
-                                            "stickied": false,
-                                            "subreddit_type": "public",
-                                            "can_gild": true,
-                                            "subreddit": "europe",
-                                            "author_flair_text_color": null,
-                                            "score_hidden": false,
-                                            "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmov9p/",
-                                            "num_reports": null,
-                                            "name": "t1_dsmov9p",
-                                            "created": 1515899279,
-                                            "author_flair_text": "Ireland",
-                                            "rte_mode": "markdown",
-                                            "created_utc": 1515870479,
-                                            "subreddit_name_prefixed": "r/europe",
-                                            "controversiality": 0,
-                                            "depth": 1,
-                                            "author_flair_background_color": null,
-                                            "mod_reports": [],
-                                            "mod_note": null,
-                                            "distinguished": null
-                                        }
-                                    },
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 2,
-                                            "name": "t1_dsn0ew2",
-                                            "id": "dsn0ew2",
-                                            "parent_id": "t1_dsm9440",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsn0ew2"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm9440",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "kodalife",
-                        "can_mod_post": false,
-                        "ups": 12,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 12,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "It's interesting to see how empty Europe was 100 years ago.",
-                        "edited": false,
-                        "author_flair_css_class": "NETH",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "The Netherlands"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>It&#39;s interesting to see how empty Europe was 100 years ago.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9440/",
-                        "num_reports": null,
-                        "name": "t1_dsm9440",
-                        "created": 1515877770,
-                        "author_flair_text": "The Netherlands",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515848970,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 4,
-                                            "name": "t1_dsmgmkz",
-                                            "id": "dsmgmkz",
-                                            "parent_id": "t1_dsmawp2",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmgmkz",
-                                                "dsmg8x9",
-                                                "dsmljni"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsmawp2",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "lEatSand",
-                        "can_mod_post": false,
-                        "ups": 19,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 19,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "We are Europeans too God dammit. ",
-                        "edited": false,
-                        "author_flair_css_class": "NORW",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "Norway"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>We are Europeans too God dammit. </p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmawp2/",
-                        "num_reports": null,
-                        "name": "t1_dsmawp2",
-                        "created": 1515881315,
-                        "author_flair_text": "Norway",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515852515,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": "",
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm98dc",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "YoSoyUnPayaso",
-                        "can_mod_post": false,
-                        "ups": 9,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 9,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "Awesome! It's also going well with much of European wildlife. Bears, Lynxes, Wolves and Wolverines are all in the lift in Europe. Populations of Eurasian Beaver has increased by 53000% over the last century, White-tailed Eagles are expanding all over Europe, European Bison roam the plains in a dozen countries again. Lets hope this trend continues! Check out [this publication](https://www.rewildingeurope.com/news/wildlife-comeback-in-europe-study-released/) for more info.",
-                        "edited": false,
-                        "author_flair_css_class": "NETH",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "The Netherlands"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>Awesome! It&#39;s also going well with much of European wildlife. Bears, Lynxes, Wolves and Wolverines are all in the lift in Europe. Populations of Eurasian Beaver has increased by 53000% over the last century, White-tailed Eagles are expanding all over Europe, European Bison roam the plains in a dozen countries again. Lets hope this trend continues! Check out <a href=\"https://www.rewildingeurope.com/news/wildlife-comeback-in-europe-study-released/\">this publication</a> for more info.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm98dc/",
-                        "num_reports": null,
-                        "name": "t1_dsm98dc",
-                        "created": 1515878031,
-                        "author_flair_text": "The Netherlands",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515849231,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 6,
-                                            "name": "t1_dsm9vd7",
-                                            "id": "dsm9vd7",
-                                            "parent_id": "t1_dsm9l34",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsm9vd7",
-                                                "dsnqr5h",
-                                                "dsmcsr3"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsm9l34",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Keurnaonsia",
-                        "can_mod_post": false,
-                        "ups": 18,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 18,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "You mean the western part of Europe? Because in Romania for example the forests are shrinking very fast with the help of Austrian logging companies.",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>You mean the western part of Europe? Because in Romania for example the forests are shrinking very fast with the help of Austrian logging companies.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsm9l34/",
-                        "num_reports": null,
-                        "name": "t1_dsm9l34",
-                        "created": 1515878781,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515849981,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "text",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 1,
-                                            "name": "t1_dsmf12u",
-                                            "id": "dsmf12u",
-                                            "parent_id": "t1_dsma8fs",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmf12u"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsma8fs",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "Doggettx",
-                        "can_mod_post": false,
-                        "ups": 7,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 7,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "Most people don't realize this but increased CO2 levels is actually good for trees/plants, just less so for humans.",
-                        "edited": false,
-                        "author_flair_css_class": null,
-                        "collapsed": false,
-                        "author_flair_richtext": [],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p>Most people don&#39;t realize this but increased CO2 levels is actually good for trees/plants, just less so for humans.</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsma8fs/",
-                        "num_reports": null,
-                        "name": "t1_dsma8fs",
-                        "created": 1515880053,
-                        "author_flair_text": null,
-                        "rte_mode": "markdown",
-                        "created_utc": 1515851253,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "t1",
-                    "data": {
-                        "subreddit_id": "t5_2qh4j",
-                        "approved_at_utc": null,
-                        "mod_reason_by": null,
-                        "banned_by": null,
-                        "author_flair_type": "richtext",
-                        "removal_reason": null,
-                        "link_id": "t3_7q3wr0",
-                        "likes": null,
-                        "replies": {
-                            "kind": "Listing",
-                            "data": {
-                                "after": null,
-                                "whitelist_status": "all_ads",
-                                "modhash": "u3c11wxozdca637c0f9b5fc16ce974d85abd0fca496f0d71dc",
-                                "dist": null,
-                                "children": [
-                                    {
-                                        "kind": "more",
-                                        "data": {
-                                            "count": 1,
-                                            "name": "t1_dsmcw2g",
-                                            "id": "dsmcw2g",
-                                            "parent_id": "t1_dsmakpm",
-                                            "depth": 1,
-                                            "children": [
-                                                "dsmcw2g"
-                                            ]
-                                        }
-                                    }
-                                ],
-                                "before": null
-                            }
-                        },
-                        "user_reports": [],
-                        "saved": false,
-                        "id": "dsmakpm",
-                        "banned_at_utc": null,
-                        "mod_reason_title": null,
-                        "gilded": 0,
-                        "archived": false,
-                        "report_reasons": null,
-                        "author": "shreditorOG",
-                        "can_mod_post": false,
-                        "ups": 6,
-                        "parent_id": "t3_7q3wr0",
-                        "score": 6,
-                        "approved_by": null,
-                        "downs": 0,
-                        "body": "https://www.rewildingeurope.com\n\nSomething cool I came across",
-                        "edited": false,
-                        "author_flair_css_class": "UNSA",
-                        "collapsed": false,
-                        "author_flair_richtext": [
-                            {
-                                "e": "text",
-                                "t": "United States of America"
-                            }
-                        ],
-                        "is_submitter": false,
-                        "collapsed_reason": null,
-                        "body_html": "<div class=\"md\"><p><a href=\"https://www.rewildingeurope.com\">https://www.rewildingeurope.com</a></p>\n\n<p>Something cool I came across</p>\n</div>",
-                        "stickied": false,
-                        "subreddit_type": "public",
-                        "can_gild": true,
-                        "subreddit": "europe",
-                        "author_flair_text_color": null,
-                        "score_hidden": false,
-                        "permalink": "/r/europe/comments/7q3wr0/watch_how_europe_is_greener_now_than_100_years_ago/dsmakpm/",
-                        "num_reports": null,
-                        "name": "t1_dsmakpm",
-                        "created": 1515880703,
-                        "author_flair_text": "United States of America",
-                        "rte_mode": "markdown",
-                        "created_utc": 1515851903,
-                        "subreddit_name_prefixed": "r/europe",
-                        "controversiality": 0,
-                        "depth": 0,
-                        "author_flair_background_color": null,
-                        "mod_reports": [],
-                        "mod_note": null,
-                        "distinguished": null
-                    }
-                },
-                {
-                    "kind": "more",
-                    "data": {
-                        "count": 62,
-                        "name": "t1_dsmqoow",
-                        "id": "dsmqoow",
-                        "parent_id": "t3_7q3wr0",
-                        "depth": 0,
-                        "children": [
-                            "dsmqoow",
-                            "dsmc7zp",
-                            "dsmd9fu",
-                            "dsmcc5r",
-                            "dsm77rj",
-                            "dsmj8np",
-                            "dsmxhp5",
-                            "dsmbpr3",
-                            "dsnmw4k",
-                            "dsm88py",
-                            "dsmsm5k",
-                            "dsmh9kg",
-                            "dsmdhgx",
-                            "dsmw5wf",
-                            "dsmkqwt",
-                            "dsmygjj",
-                            "dsmdp6p",
-                            "dsmgipw",
-                            "dsmildz",
-                            "dsns4wa",
-                            "dsmidhn",
-                            "dsm7ozy",
-                            "dsmaa8g",
-                            "dsma193",
-                            "dsmu7h5",
-                            "dsm8s0q",
-                            "dsng8rf",
-                            "dsmrmxr",
-                            "dsm9eau",
-                            "dsmfv8n",
-                            "dsm6y5k",
-                            "dsmdpif",
-                            "dsmbhth",
-                            "dsmvrpb"
-                        ]
-                    }
-                }
-            ],
-            "before": null
-        }
-    }
-];
-/* harmony export (immutable) */ __webpack_exports__["b"] = listing_data;
-
-
-
-/***/ }),
-/* 40 */,
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _Symbol = __webpack_require__(61),
-    getRawTag = __webpack_require__(144),
-    objectToString = __webpack_require__(148);
-
-/** `Object#toString` result references. */
-var nullTag = '[object Null]',
-    undefinedTag = '[object Undefined]';
-
-/** Built-in value references. */
-var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
-
-/**
- * The base implementation of `getTag` without fallbacks for buggy environments.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-function baseGetTag(value) {
-    if (value == null) {
-        return value === undefined ? undefinedTag : nullTag;
-    }
-    return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-}
-
-module.exports = baseGetTag;
-
-/***/ }),
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _baseGetTag = __webpack_require__(132);
-
-var _baseGetTag2 = _interopRequireDefault(_baseGetTag);
-
-var _getPrototype = __webpack_require__(134);
-
-var _getPrototype2 = _interopRequireDefault(_getPrototype);
-
-var _isObjectLike = __webpack_require__(139);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for built-in method references. */
-var funcProto = Function.prototype,
-    objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = funcProto.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to infer the `Object` constructor. */
-var objectCtorString = funcToString.call(Object);
-
-/**
- * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
- *
- * @static
- * @memberOf _
- * @since 0.8.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- * }
- *
- * _.isPlainObject(new Foo);
- * // => false
- *
- * _.isPlainObject([1, 2, 3]);
- * // => false
- *
- * _.isPlainObject({ 'x': 0, 'y': 0 });
- * // => true
- *
- * _.isPlainObject(Object.create(null));
- * // => true
- */
-function isPlainObject(value) {
-  if (!(0, _isObjectLike2.default)(value) || (0, _baseGetTag2.default)(value) != objectTag) {
-    return false;
-  }
-  var proto = (0, _getPrototype2.default)(value);
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-  return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
-}
-
-exports.default = isPlainObject;
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var root = __webpack_require__(36);
-
-/** Built-in value references. */
-var _Symbol = root.Symbol;
-
-module.exports = _Symbol;
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-module.exports = isArray;
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return value != null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object';
-}
-
-module.exports = isObjectLike;
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function (module) {
-	if (!module.webpackPolyfill) {
-		module.deprecate = function () {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function get() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function get() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-/***/ }),
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _root = __webpack_require__(138);
-
-var _root2 = _interopRequireDefault(_root);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/** Built-in value references. */
-var _Symbol = _root2.default.Symbol;
-
-exports.default = _Symbol;
-
-/***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var baseIsNative = __webpack_require__(141),
-    getValue = __webpack_require__(145);
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = getValue(object, key);
-  return baseIsNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-/***/ }),
-/* 74 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Performs a
- * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
- * comparison between two values to determine if they are equivalent.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- * @example
- *
- * var object = { 'a': 1 };
- * var other = { 'a': 1 };
- *
- * _.eq(object, object);
- * // => true
- *
- * _.eq(object, other);
- * // => false
- *
- * _.eq('a', 'a');
- * // => true
- *
- * _.eq('a', Object('a'));
- * // => false
- *
- * _.eq(NaN, NaN);
- * // => true
- */
-function eq(value, other) {
-  return value === other || value !== value && other !== other;
-}
-
-module.exports = eq;
-
-/***/ }),
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
-/* 84 */,
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */,
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */,
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */,
-/* 103 */,
-/* 104 */
+/***/ 105:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5411,7 +306,8 @@ function compose() {
 }
 
 /***/ }),
-/* 105 */
+
+/***/ 106:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5426,11 +322,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.default = createStore;
 
-var _isPlainObject = __webpack_require__(60);
+var _isPlainObject = __webpack_require__(62);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _symbolObservable = __webpack_require__(249);
+var _symbolObservable = __webpack_require__(257);
 
 var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
 
@@ -5683,7 +579,8 @@ var ActionTypes = exports.ActionTypes = {
 }
 
 /***/ }),
-/* 106 */
+
+/***/ 107:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5716,9 +613,8 @@ function warning(message) {
 }
 
 /***/ }),
-/* 107 */,
-/* 108 */,
-/* 109 */
+
+/***/ 110:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5730,16 +626,43 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var freeGlobal = (typeof global === 'undefined' ? 'undefined' : _typeof(global)) == 'object' && global && global.Object === Object && global;
 
 module.exports = freeGlobal;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 110 */
+
+/***/ 111:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseGetTag = __webpack_require__(41),
+var baseIsNative = __webpack_require__(157),
+    getValue = __webpack_require__(160);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+module.exports = getNative;
+
+/***/ }),
+
+/***/ 112:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var baseGetTag = __webpack_require__(42),
     isObject = __webpack_require__(37);
 
 /** `Object#toString` result references. */
@@ -5778,8 +701,206 @@ function isFunction(value) {
 module.exports = isFunction;
 
 /***/ }),
-/* 111 */,
-/* 112 */
+
+/***/ 117:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var defineProperty = __webpack_require__(118);
+
+/**
+ * The base implementation of `assignValue` and `assignMergeValue` without
+ * value checks.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {string} key The key of the property to assign.
+ * @param {*} value The value to assign.
+ */
+function baseAssignValue(object, key, value) {
+  if (key == '__proto__' && defineProperty) {
+    defineProperty(object, key, {
+      'configurable': true,
+      'enumerable': true,
+      'value': value,
+      'writable': true
+    });
+  } else {
+    object[key] = value;
+  }
+}
+
+module.exports = baseAssignValue;
+
+/***/ }),
+
+/***/ 118:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getNative = __webpack_require__(111);
+
+var defineProperty = function () {
+  try {
+    var func = getNative(Object, 'defineProperty');
+    func({}, '', {});
+    return func;
+  } catch (e) {}
+}();
+
+module.exports = defineProperty;
+
+/***/ }),
+
+/***/ 119:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/** Used to detect unsigned integer values. */
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return !!length && (typeof value == 'number' || reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
+}
+
+module.exports = isIndex;
+
+/***/ }),
+
+/***/ 120:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * This method returns the first argument it receives.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {*} value Any value.
+ * @returns {*} Returns `value`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ *
+ * console.log(_.identity(object) === object);
+ * // => true
+ */
+function identity(value) {
+  return value;
+}
+
+module.exports = identity;
+
+/***/ }),
+
+/***/ 121:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isFunction = __webpack_require__(112),
+    isLength = __webpack_require__(122);
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+module.exports = isArrayLike;
+
+/***/ }),
+
+/***/ 122:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This method is loosely based on
+ * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ * @example
+ *
+ * _.isLength(3);
+ * // => true
+ *
+ * _.isLength(Number.MIN_VALUE);
+ * // => false
+ *
+ * _.isLength(Infinity);
+ * // => false
+ *
+ * _.isLength('3');
+ * // => false
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+/***/ }),
+
+/***/ 129:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5788,45 +909,127 @@ module.exports = isFunction;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-// Message type used for dispatch events
-// from the Proxy Stores to background
-var DISPATCH_TYPE = exports.DISPATCH_TYPE = 'chromex.dispatch';
+exports.alias = exports.wrapStore = exports.Store = undefined;
 
-// Message type for state update events from
-// background to Proxy Stores
-var STATE_TYPE = exports.STATE_TYPE = 'chromex.state';
+var _Store = __webpack_require__(297);
 
-// Message type for state patch events from
-// background to Proxy Stores
-var PATCH_STATE_TYPE = exports.PATCH_STATE_TYPE = 'chromex.patch_state';
+var _Store2 = _interopRequireDefault(_Store);
 
-// The `change` value for updated or inserted fields resulting from shallow diff
-var DIFF_STATUS_UPDATED = exports.DIFF_STATUS_UPDATED = 'updated';
+var _wrapStore = __webpack_require__(299);
 
-// The `change` value for removed fields resulting from shallow diff
-var DIFF_STATUS_REMOVED = exports.DIFF_STATUS_REMOVED = 'removed';
+var _wrapStore2 = _interopRequireDefault(_wrapStore);
+
+var _alias = __webpack_require__(296);
+
+var _alias2 = _interopRequireDefault(_alias);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+exports.Store = _Store2.default;
+exports.wrapStore = _wrapStore2.default;
+exports.alias = _alias2.default;
 
 /***/ }),
-/* 113 */,
-/* 114 */,
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */,
-/* 124 */,
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */,
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */
+
+/***/ 130:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const STORE_NAME = "REDDIT_EVERYWHERE";
+/* harmony export (immutable) */ __webpack_exports__["a"] = STORE_NAME;
+
+const COMPLETE = "complete";
+/* harmony export (immutable) */ __webpack_exports__["e"] = COMPLETE;
+ // Based on chrome spec. Don't change!
+const URL_UPDATED_EVENT = "EVENT__URL_UPDATED";
+/* harmony export (immutable) */ __webpack_exports__["f"] = URL_UPDATED_EVENT;
+
+const NODE_ACTIONS = {
+    AFTER: 'after',
+    APPEND: 'append',
+    BEFORE: 'before',
+    INSERT: 'insert',
+    REPLACE: 'replace',
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = NODE_ACTIONS;
+
+// Specific rules for popular websites
+const PAGE_LOCATIONS = {
+    'youtube.com': {
+        name: '#ticket-shelf',
+        type: NODE_ACTIONS.INSERT,
+    },
+    'gfycat.com': {
+        name: '#controls-container',
+        type: NODE_ACTIONS.AFTER,
+    },
+    'twitter.com': {
+        name: '.permalink-tweet-container',
+        type: NODE_ACTIONS.AFTER,
+    },
+    'streamable.com': {
+        name: '.stickypush',
+        type: NODE_ACTIONS.AFTER,
+    },
+    'al.com': {
+        name: '#article__footer',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    'npr.com': {
+        name: '#newsletter-acquisition-callout-data',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    'independent.co.uk': {
+        name: '#commentsDiv',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    'imgur.com': {
+        name: '#comments',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    'washingtonpost.com': {
+        name: '#comments',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    'wikipedia.org': {
+        name: '#References',
+        type: NODE_ACTIONS.BEFORE,
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["c"] = PAGE_LOCATIONS;
+
+// what to try if the domain isn't in our specific list
+const DEFAULT_LOCATIONS = [
+    {
+        name: '#comments',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    {
+        name: '#disqus_thread',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    {
+        name: '#fb-comments',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    {
+        name: '#article__footer',
+        type: NODE_ACTIONS.REPLACE,
+    },
+    {
+        name: 'footer',
+        type: NODE_ACTIONS.BEFORE,
+    },
+];
+/* harmony export (immutable) */ __webpack_exports__["d"] = DEFAULT_LOCATIONS;
+
+
+
+/***/ }),
+
+/***/ 149:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5840,11 +1043,11 @@ var _Symbol2 = __webpack_require__(72);
 
 var _Symbol3 = _interopRequireDefault(_Symbol2);
 
-var _getRawTag = __webpack_require__(135);
+var _getRawTag = __webpack_require__(152);
 
 var _getRawTag2 = _interopRequireDefault(_getRawTag);
 
-var _objectToString = __webpack_require__(136);
+var _objectToString = __webpack_require__(153);
 
 var _objectToString2 = _interopRequireDefault(_objectToString);
 
@@ -5874,7 +1077,8 @@ function baseGetTag(value) {
 exports.default = baseGetTag;
 
 /***/ }),
-/* 133 */
+
+/***/ 150:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5890,10 +1094,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var freeGlobal = (typeof global === 'undefined' ? 'undefined' : _typeof(global)) == 'object' && global && global.Object === Object && global;
 
 exports.default = freeGlobal;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 134 */
+
+/***/ 151:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5903,7 +1108,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _overArg = __webpack_require__(137);
+var _overArg = __webpack_require__(154);
 
 var _overArg2 = _interopRequireDefault(_overArg);
 
@@ -5915,7 +1120,8 @@ var getPrototype = (0, _overArg2.default)(Object.getPrototypeOf, Object);
 exports.default = getPrototype;
 
 /***/ }),
-/* 135 */
+
+/***/ 152:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5977,7 +1183,8 @@ function getRawTag(value) {
 exports.default = getRawTag;
 
 /***/ }),
-/* 136 */
+
+/***/ 153:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6010,7 +1217,8 @@ function objectToString(value) {
 exports.default = objectToString;
 
 /***/ }),
-/* 137 */
+
+/***/ 154:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6036,7 +1244,8 @@ function overArg(func, transform) {
 exports.default = overArg;
 
 /***/ }),
-/* 138 */
+
+/***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6048,7 +1257,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _freeGlobal = __webpack_require__(133);
+var _freeGlobal = __webpack_require__(150);
 
 var _freeGlobal2 = _interopRequireDefault(_freeGlobal);
 
@@ -6063,7 +1272,8 @@ var root = _freeGlobal2.default || freeSelf || Function('return this')();
 exports.default = root;
 
 /***/ }),
-/* 139 */
+
+/***/ 156:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6106,49 +1316,17 @@ function isObjectLike(value) {
 exports.default = isObjectLike;
 
 /***/ }),
-/* 140 */
+
+/***/ 157:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defineProperty = __webpack_require__(143);
-
-/**
- * The base implementation of `assignValue` and `assignMergeValue` without
- * value checks.
- *
- * @private
- * @param {Object} object The object to modify.
- * @param {string} key The key of the property to assign.
- * @param {*} value The value to assign.
- */
-function baseAssignValue(object, key, value) {
-  if (key == '__proto__' && defineProperty) {
-    defineProperty(object, key, {
-      'configurable': true,
-      'enumerable': true,
-      'value': value,
-      'writable': true
-    });
-  } else {
-    object[key] = value;
-  }
-}
-
-module.exports = baseAssignValue;
-
-/***/ }),
-/* 141 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isFunction = __webpack_require__(110),
-    isMasked = __webpack_require__(147),
+var isFunction = __webpack_require__(112),
+    isMasked = __webpack_require__(161),
     isObject = __webpack_require__(37),
-    toSource = __webpack_require__(149);
+    toSource = __webpack_require__(163);
 
 /**
  * Used to match `RegExp`
@@ -6191,13 +1369,14 @@ function baseIsNative(value) {
 module.exports = baseIsNative;
 
 /***/ }),
-/* 142 */
+
+/***/ 158:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var root = __webpack_require__(36);
+var root = __webpack_require__(38);
 
 /** Used to detect overreaching core-js shims. */
 var coreJsData = root['__core-js_shared__'];
@@ -6205,32 +1384,14 @@ var coreJsData = root['__core-js_shared__'];
 module.exports = coreJsData;
 
 /***/ }),
-/* 143 */
+
+/***/ 159:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var getNative = __webpack_require__(73);
-
-var defineProperty = function () {
-  try {
-    var func = getNative(Object, 'defineProperty');
-    func({}, '', {});
-    return func;
-  } catch (e) {}
-}();
-
-module.exports = defineProperty;
-
-/***/ }),
-/* 144 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _Symbol = __webpack_require__(61);
+var _Symbol = __webpack_require__(65);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -6278,7 +1439,8 @@ function getRawTag(value) {
 module.exports = getRawTag;
 
 /***/ }),
-/* 145 */
+
+/***/ 160:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6299,41 +1461,14 @@ function getValue(object, key) {
 module.exports = getValue;
 
 /***/ }),
-/* 146 */
+
+/***/ 161:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/** Used to detect unsigned integer values. */
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return !!length && (typeof value == 'number' || reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
-}
-
-module.exports = isIndex;
-
-/***/ }),
-/* 147 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var coreJsData = __webpack_require__(142);
+var coreJsData = __webpack_require__(158);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = function () {
@@ -6355,7 +1490,8 @@ function isMasked(func) {
 module.exports = isMasked;
 
 /***/ }),
-/* 148 */
+
+/***/ 162:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6385,7 +1521,8 @@ function objectToString(value) {
 module.exports = objectToString;
 
 /***/ }),
-/* 149 */
+
+/***/ 163:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6419,210 +1556,39 @@ function toSource(func) {
 module.exports = toSource;
 
 /***/ }),
-/* 150 */,
-/* 151 */
+
+/***/ 21:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-/**
- * This method returns the first argument it receives.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Util
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'a': 1 };
- *
- * console.log(_.identity(object) === object);
- * // => true
- */
-function identity(value) {
-  return value;
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
 }
 
-module.exports = identity;
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
 
 /***/ }),
-/* 152 */
-/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-var isFunction = __webpack_require__(110),
-    isLength = __webpack_require__(153);
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(value.length) && !isFunction(value);
-}
-
-module.exports = isArrayLike;
-
-/***/ }),
-/* 153 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This method is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-function isLength(value) {
-  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-module.exports = isLength;
-
-/***/ }),
-/* 154 */,
-/* 155 */,
-/* 156 */,
-/* 157 */,
-/* 158 */,
-/* 159 */,
-/* 160 */,
-/* 161 */,
-/* 162 */,
-/* 163 */,
-/* 164 */,
-/* 165 */,
-/* 166 */,
-/* 167 */,
-/* 168 */,
-/* 169 */,
-/* 170 */,
-/* 171 */,
-/* 172 */,
-/* 173 */,
-/* 174 */,
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
-/* 184 */,
-/* 185 */,
-/* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
-/* 202 */,
-/* 203 */,
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */,
-/* 227 */,
-/* 228 */,
-/* 229 */,
-/* 230 */,
-/* 231 */,
-/* 232 */,
-/* 233 */,
-/* 234 */,
-/* 235 */,
-/* 236 */,
-/* 237 */,
-/* 238 */,
-/* 239 */,
-/* 240 */,
-/* 241 */,
-/* 242 */,
-/* 243 */,
-/* 244 */
+/***/ 252:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6633,7 +1599,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = applyMiddleware;
 
-var _compose = __webpack_require__(104);
+var _compose = __webpack_require__(105);
 
 var _compose2 = _interopRequireDefault(_compose);
 
@@ -6695,7 +1661,8 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 245 */
+
+/***/ 253:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6757,7 +1724,8 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 246 */
+
+/***/ 254:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6768,13 +1736,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = combineReducers;
 
-var _createStore = __webpack_require__(105);
+var _createStore = __webpack_require__(106);
 
-var _isPlainObject = __webpack_require__(60);
+var _isPlainObject = __webpack_require__(62);
 
 var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 
-var _warning = __webpack_require__(106);
+var _warning = __webpack_require__(107);
 
 var _warning2 = _interopRequireDefault(_warning);
 
@@ -6909,18 +1877,18 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 247 */,
-/* 248 */,
-/* 249 */
+
+/***/ 257:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(250);
+module.exports = __webpack_require__(258);
 
 /***/ }),
-/* 250 */
+
+/***/ 258:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6930,7 +1898,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(251);
+var _ponyfill = __webpack_require__(259);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -6954,10 +1922,11 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(64)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(64)(module)))
 
 /***/ }),
-/* 251 */
+
+/***/ 259:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6986,76 +1955,165 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 252 */,
-/* 253 */
-/***/ (function(module, exports, __webpack_require__) {
+
+/***/ 27:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const FETCH_URL = "FETCH_URL";
+/* harmony export (immutable) */ __webpack_exports__["FETCH_URL"] = FETCH_URL;
 
+const FETCH_COMMENTS = "FETCH_COMMENTS";
+/* harmony export (immutable) */ __webpack_exports__["FETCH_COMMENTS"] = FETCH_COMMENTS;
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+const SET_IS_EMBED = "SET_IS_EMBED";
+/* harmony export (immutable) */ __webpack_exports__["SET_IS_EMBED"] = SET_IS_EMBED;
+
+const SET_TAB_URL = "SET_TAB_URL";
+/* harmony export (immutable) */ __webpack_exports__["SET_TAB_URL"] = SET_TAB_URL;
+
+const SUBREDDIT_SELECTED = "SUBREDDIT_SELECTED";
+/* harmony export (immutable) */ __webpack_exports__["SUBREDDIT_SELECTED"] = SUBREDDIT_SELECTED;
+
+const COMMENT_COLLAPSED = "COMMENT_COLLAPSED";
+/* harmony export (immutable) */ __webpack_exports__["COMMENT_COLLAPSED"] = COMMENT_COLLAPSED;
+
+const FOUND_NODE = "FOUND_NODE";
+/* harmony export (immutable) */ __webpack_exports__["FOUND_NODE"] = FOUND_NODE;
+
+const SET_ACTIVE = "SET_ACTIVE";
+/* harmony export (immutable) */ __webpack_exports__["SET_ACTIVE"] = SET_ACTIVE;
+
+const SET_BLACKLIST = "SET_BLACKLIST";
+/* harmony export (immutable) */ __webpack_exports__["SET_BLACKLIST"] = SET_BLACKLIST;
+
+const SET_META = "SET_META";
+/* harmony export (immutable) */ __webpack_exports__["SET_META"] = SET_META;
+
+const SET_REFERRER = "SET_REFERRER";
+/* harmony export (immutable) */ __webpack_exports__["SET_REFERRER"] = SET_REFERRER;
+
+const CHANGE_BLACKLIST = "CHANGE_BLACKLIST";
+/* harmony export (immutable) */ __webpack_exports__["CHANGE_BLACKLIST"] = CHANGE_BLACKLIST;
+
+const APP_NAME = 'reddit-everywhere';
+// TODO: Move these into a file/export from somewhere
+const SUBREDDIT_WHITELIST = [
+    'politics',
+    'news',
+    'worldnews',
+];
+const setReferrer = referrer => ({
+    type: SET_REFERRER,
+    payload: referrer,
 });
-exports.alias = exports.wrapStore = exports.Store = undefined;
+/* harmony export (immutable) */ __webpack_exports__["setReferrer"] = setReferrer;
 
-var _Store = __webpack_require__(315);
+const setMeta = meta => ({
+    type: SET_META,
+    payload: meta,
+});
+/* harmony export (immutable) */ __webpack_exports__["setMeta"] = setMeta;
 
-var _Store2 = _interopRequireDefault(_Store);
+const setActive = postId => ({
+    type: SET_ACTIVE,
+    payload: postId,
+});
+/* harmony export (immutable) */ __webpack_exports__["setActive"] = setActive;
 
-var _wrapStore = __webpack_require__(317);
+const setIsEmbed = () => ({
+    type: SET_IS_EMBED,
+});
+/* harmony export (immutable) */ __webpack_exports__["setIsEmbed"] = setIsEmbed;
 
-var _wrapStore2 = _interopRequireDefault(_wrapStore);
+const fetchComments = permalink => (dispatch, getState) => {
+    const request_url = `https://reddit.com${permalink}.json?truncate=15&app=${APP_NAME}&raw_json=1`;
+    fetch(request_url)
+        .then(response => response.json())
+        .then(body => {
+        dispatch({
+            type: FETCH_COMMENTS,
+            payload: body,
+        });
+    });
+};
+/* harmony export (immutable) */ __webpack_exports__["fetchComments"] = fetchComments;
 
-var _alias = __webpack_require__(314);
-
-var _alias2 = _interopRequireDefault(_alias);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-exports.Store = _Store2.default;
-exports.wrapStore = _wrapStore2.default;
-exports.alias = _alias2.default;
-
-/***/ }),
-/* 254 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-function createThunkMiddleware(extraArgument) {
-  return function (_ref) {
-    var dispatch = _ref.dispatch,
-        getState = _ref.getState;
-    return function (next) {
-      return function (action) {
-        if (typeof action === 'function') {
-          return action(dispatch, getState, extraArgument);
+const fetchURL = url => (dispatch, getState) => {
+    fetch(`https://reddit.com/api/info/.json?url=${url}&app=${APP_NAME}`)
+        .then(response => response.json())
+        .then(body => {
+        const posts = body.data.children;
+        const whiteListedPosts = posts.filter(post => 
+        // SUBREDDIT_WHITELIST.indexOf(post.data.subreddit) > -1
+        true);
+        dispatch({ type: FETCH_URL, payload: whiteListedPosts, meta: url });
+        if (whiteListedPosts.length > 0) {
+            dispatch(fetchComments(whiteListedPosts[0].data.permalink));
         }
+    })
+        .catch(error => dispatch({ type: "REQUEST_FAILED", error }));
+};
+/* harmony export (immutable) */ __webpack_exports__["fetchURL"] = fetchURL;
 
-        return next(action);
-      };
-    };
-  };
-}
+const fetchUser = () => (dispatch, getState) => {
+    fetch(`https://oauth.reddit.com/api/v1/me`)
+        .then(response => console.log(response));
+};
+/* harmony export (immutable) */ __webpack_exports__["fetchUser"] = fetchUser;
 
-var thunk = createThunkMiddleware();
-thunk.withExtraArgument = createThunkMiddleware;
+const setTabURL = (tabId, url) => ({
+    type: SET_TAB_URL,
+    payload: {
+        tabId,
+        url,
+    },
+});
+/* harmony export (immutable) */ __webpack_exports__["setTabURL"] = setTabURL;
 
-exports['default'] = thunk;
+const subredditChanged = postId => (dispatch, getState) => {
+    dispatch({
+        type: SUBREDDIT_SELECTED,
+        payload: postId,
+    });
+    const state = getState();
+    if (!(postId in state.comments)) {
+        const post = state.posts.models[postId];
+        dispatch(fetchComments(post.permalink));
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["subredditChanged"] = subredditChanged;
+
+const collapseComment = commentId => ({
+    type: COMMENT_COLLAPSED,
+    payload: commentId,
+});
+/* harmony export (immutable) */ __webpack_exports__["collapseComment"] = collapseComment;
+
+const foundNode = node => ({
+    type: FOUND_NODE,
+    payload: node,
+});
+/* harmony export (immutable) */ __webpack_exports__["foundNode"] = foundNode;
+
+const setBlacklist = object => ({
+    type: SET_BLACKLIST,
+    payload: object,
+});
+/* harmony export (immutable) */ __webpack_exports__["setBlacklist"] = setBlacklist;
+
+const changeBlacklist = object => ({
+    type: CHANGE_BLACKLIST,
+    payload: object,
+});
+/* harmony export (immutable) */ __webpack_exports__["changeBlacklist"] = changeBlacklist;
+
+
 
 /***/ }),
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */
+
+/***/ 270:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7088,18 +2146,19 @@ function apply(func, thisArg, args) {
 module.exports = apply;
 
 /***/ }),
-/* 263 */
+
+/***/ 271:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseTimes = __webpack_require__(272),
-    isArguments = __webpack_require__(307),
-    isArray = __webpack_require__(62),
-    isBuffer = __webpack_require__(308),
-    isIndex = __webpack_require__(146),
-    isTypedArray = __webpack_require__(309);
+var baseTimes = __webpack_require__(278),
+    isArguments = __webpack_require__(291),
+    isArray = __webpack_require__(68),
+    isBuffer = __webpack_require__(292),
+    isIndex = __webpack_require__(119),
+    isTypedArray = __webpack_require__(293);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7143,15 +2202,15 @@ function arrayLikeKeys(value, inherited) {
 module.exports = arrayLikeKeys;
 
 /***/ }),
-/* 264 */,
-/* 265 */
+
+/***/ 272:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseAssignValue = __webpack_require__(140),
-    eq = __webpack_require__(74);
+var baseAssignValue = __webpack_require__(117),
+    eq = __webpack_require__(73);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7179,15 +2238,15 @@ function assignValue(object, key, value) {
 module.exports = assignValue;
 
 /***/ }),
-/* 266 */,
-/* 267 */
+
+/***/ 273:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseGetTag = __webpack_require__(41),
-    isObjectLike = __webpack_require__(63);
+var baseGetTag = __webpack_require__(42),
+    isObjectLike = __webpack_require__(43);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]';
@@ -7206,15 +2265,16 @@ function baseIsArguments(value) {
 module.exports = baseIsArguments;
 
 /***/ }),
-/* 268 */
+
+/***/ 274:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseGetTag = __webpack_require__(41),
-    isLength = __webpack_require__(153),
-    isObjectLike = __webpack_require__(63);
+var baseGetTag = __webpack_require__(42),
+    isLength = __webpack_require__(122),
+    isObjectLike = __webpack_require__(43);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -7262,15 +2322,16 @@ function baseIsTypedArray(value) {
 module.exports = baseIsTypedArray;
 
 /***/ }),
-/* 269 */
+
+/***/ 275:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var isObject = __webpack_require__(37),
-    isPrototype = __webpack_require__(286),
-    nativeKeysIn = __webpack_require__(298);
+    isPrototype = __webpack_require__(283),
+    nativeKeysIn = __webpack_require__(284);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7303,15 +2364,16 @@ function baseKeysIn(object) {
 module.exports = baseKeysIn;
 
 /***/ }),
-/* 270 */
+
+/***/ 276:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var identity = __webpack_require__(151),
-    overRest = __webpack_require__(300),
-    setToString = __webpack_require__(301);
+var identity = __webpack_require__(120),
+    overRest = __webpack_require__(286),
+    setToString = __webpack_require__(287);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -7328,15 +2390,16 @@ function baseRest(func, start) {
 module.exports = baseRest;
 
 /***/ }),
-/* 271 */
+
+/***/ 277:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var constant = __webpack_require__(306),
-    defineProperty = __webpack_require__(143),
-    identity = __webpack_require__(151);
+var constant = __webpack_require__(290),
+    defineProperty = __webpack_require__(118),
+    identity = __webpack_require__(120);
 
 /**
  * The base implementation of `setToString` without support for hot loop shorting.
@@ -7358,7 +2421,8 @@ var baseSetToString = !defineProperty ? identity : function (func, string) {
 module.exports = baseSetToString;
 
 /***/ }),
-/* 272 */
+
+/***/ 278:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7386,8 +2450,8 @@ function baseTimes(n, iteratee) {
 module.exports = baseTimes;
 
 /***/ }),
-/* 273 */,
-/* 274 */
+
+/***/ 279:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7409,15 +2473,15 @@ function baseUnary(func) {
 module.exports = baseUnary;
 
 /***/ }),
-/* 275 */,
-/* 276 */
+
+/***/ 280:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var assignValue = __webpack_require__(265),
-    baseAssignValue = __webpack_require__(140);
+var assignValue = __webpack_require__(272),
+    baseAssignValue = __webpack_require__(117);
 
 /**
  * Copies properties of `source` to `object`.
@@ -7456,14 +2520,15 @@ function copyObject(source, props, object, customizer) {
 module.exports = copyObject;
 
 /***/ }),
-/* 277 */
+
+/***/ 281:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseRest = __webpack_require__(270),
-    isIterateeCall = __webpack_require__(283);
+var baseRest = __webpack_require__(276),
+    isIterateeCall = __webpack_require__(282);
 
 /**
  * Creates a function like `_.assign`.
@@ -7499,12 +2564,8 @@ function createAssigner(assigner) {
 module.exports = createAssigner;
 
 /***/ }),
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */
+
+/***/ 282:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7512,9 +2573,9 @@ module.exports = createAssigner;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var eq = __webpack_require__(74),
-    isArrayLike = __webpack_require__(152),
-    isIndex = __webpack_require__(146),
+var eq = __webpack_require__(73),
+    isArrayLike = __webpack_require__(121),
+    isIndex = __webpack_require__(119),
     isObject = __webpack_require__(37);
 
 /**
@@ -7541,9 +2602,8 @@ function isIterateeCall(value, index, object) {
 module.exports = isIterateeCall;
 
 /***/ }),
-/* 284 */,
-/* 285 */,
-/* 286 */
+
+/***/ 283:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7569,18 +2629,8 @@ function isPrototype(value) {
 module.exports = isPrototype;
 
 /***/ }),
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */
+
+/***/ 284:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7608,7 +2658,8 @@ function nativeKeysIn(object) {
 module.exports = nativeKeysIn;
 
 /***/ }),
-/* 299 */
+
+/***/ 285:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7616,7 +2667,7 @@ module.exports = nativeKeysIn;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var freeGlobal = __webpack_require__(109);
+var freeGlobal = __webpack_require__(110);
 
 /** Detect free variable `exports`. */
 var freeExports = ( false ? 'undefined' : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
@@ -7641,13 +2692,14 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)(module)))
 
 /***/ }),
-/* 300 */
+
+/***/ 286:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var apply = __webpack_require__(262);
+var apply = __webpack_require__(270);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -7685,14 +2737,15 @@ function overRest(func, start, transform) {
 module.exports = overRest;
 
 /***/ }),
-/* 301 */
+
+/***/ 287:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseSetToString = __webpack_require__(271),
-    shortOut = __webpack_require__(302);
+var baseSetToString = __webpack_require__(277),
+    shortOut = __webpack_require__(288);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -7707,7 +2760,8 @@ var setToString = shortOut(baseSetToString);
 module.exports = setToString;
 
 /***/ }),
-/* 302 */
+
+/***/ 288:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7752,17 +2806,16 @@ function shortOut(func) {
 module.exports = shortOut;
 
 /***/ }),
-/* 303 */,
-/* 304 */,
-/* 305 */
+
+/***/ 289:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var copyObject = __webpack_require__(276),
-    createAssigner = __webpack_require__(277),
-    keysIn = __webpack_require__(310);
+var copyObject = __webpack_require__(280),
+    createAssigner = __webpack_require__(281),
+    keysIn = __webpack_require__(294);
 
 /**
  * This method is like `_.assign` except that it iterates over own and
@@ -7802,7 +2855,8 @@ var assignIn = createAssigner(function (object, source) {
 module.exports = assignIn;
 
 /***/ }),
-/* 306 */
+
+/***/ 290:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7836,14 +2890,15 @@ function constant(value) {
 module.exports = constant;
 
 /***/ }),
-/* 307 */
+
+/***/ 291:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseIsArguments = __webpack_require__(267),
-    isObjectLike = __webpack_require__(63);
+var baseIsArguments = __webpack_require__(273),
+    isObjectLike = __webpack_require__(43);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7881,7 +2936,8 @@ var isArguments = baseIsArguments(function () {
 module.exports = isArguments;
 
 /***/ }),
-/* 308 */
+
+/***/ 292:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7889,8 +2945,8 @@ module.exports = isArguments;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var root = __webpack_require__(36),
-    stubFalse = __webpack_require__(312);
+var root = __webpack_require__(38),
+    stubFalse = __webpack_require__(295);
 
 /** Detect free variable `exports`. */
 var freeExports = ( false ? 'undefined' : _typeof(exports)) == 'object' && exports && !exports.nodeType && exports;
@@ -7930,15 +2986,16 @@ module.exports = isBuffer;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(64)(module)))
 
 /***/ }),
-/* 309 */
+
+/***/ 293:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var baseIsTypedArray = __webpack_require__(268),
-    baseUnary = __webpack_require__(274),
-    nodeUtil = __webpack_require__(299);
+var baseIsTypedArray = __webpack_require__(274),
+    baseUnary = __webpack_require__(279),
+    nodeUtil = __webpack_require__(285);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -7965,15 +3022,16 @@ var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedA
 module.exports = isTypedArray;
 
 /***/ }),
-/* 310 */
+
+/***/ 294:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var arrayLikeKeys = __webpack_require__(263),
-    baseKeysIn = __webpack_require__(269),
-    isArrayLike = __webpack_require__(152);
+var arrayLikeKeys = __webpack_require__(271),
+    baseKeysIn = __webpack_require__(275),
+    isArrayLike = __webpack_require__(121);
 
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
@@ -8005,8 +3063,8 @@ function keysIn(object) {
 module.exports = keysIn;
 
 /***/ }),
-/* 311 */,
-/* 312 */
+
+/***/ 295:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8032,8 +3090,8 @@ function stubFalse() {
 module.exports = stubFalse;
 
 /***/ }),
-/* 313 */,
-/* 314 */
+
+/***/ 296:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8065,7 +3123,8 @@ exports.default = function (aliases) {
 };
 
 /***/ }),
-/* 315 */
+
+/***/ 297:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8085,11 +3144,11 @@ var _createClass = function () {
   };
 }();
 
-var _assignIn = __webpack_require__(305);
+var _assignIn = __webpack_require__(289);
 
 var _assignIn2 = _interopRequireDefault(_assignIn);
 
-var _constants = __webpack_require__(112);
+var _constants = __webpack_require__(76);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -8295,7 +3354,8 @@ var Store = function () {
 exports.default = Store;
 
 /***/ }),
-/* 316 */
+
+/***/ 298:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8306,7 +3366,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = shallowDiff;
 
-var _constants = __webpack_require__(112);
+var _constants = __webpack_require__(76);
 
 /**
  * Returns a new Object containing only the fields in `new` that differ from `old`
@@ -8343,7 +3403,8 @@ function shallowDiff(oldObj, newObj) {
 }
 
 /***/ }),
-/* 317 */
+
+/***/ 299:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8353,9 +3414,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _constants = __webpack_require__(112);
+var _constants = __webpack_require__(76);
 
-var _shallowDiff = __webpack_require__(316);
+var _shallowDiff = __webpack_require__(298);
 
 var _shallowDiff2 = _interopRequireDefault(_shallowDiff);
 
@@ -8487,27 +3548,156 @@ exports.default = function (store, _ref) {
 };
 
 /***/ }),
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */
+
+/***/ 311:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+
+/***/ }),
+
+/***/ 37:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+  return value != null && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+/***/ }),
+
+/***/ 38:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var freeGlobal = __webpack_require__(110);
+
+/** Detect free variable `self`. */
+var freeSelf = (typeof self === 'undefined' ? 'undefined' : _typeof(self)) == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+module.exports = root;
+
+/***/ }),
+
+/***/ 40:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
+
+var _createStore = __webpack_require__(106);
+
+var _createStore2 = _interopRequireDefault(_createStore);
+
+var _combineReducers = __webpack_require__(254);
+
+var _combineReducers2 = _interopRequireDefault(_combineReducers);
+
+var _bindActionCreators = __webpack_require__(253);
+
+var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
+
+var _applyMiddleware = __webpack_require__(252);
+
+var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
+
+var _compose = __webpack_require__(105);
+
+var _compose2 = _interopRequireDefault(_compose);
+
+var _warning = __webpack_require__(107);
+
+var _warning2 = _interopRequireDefault(_warning);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+* This is a dummy function to check if the function name has been altered by minification.
+* If the function has been minified and NODE_ENV !== 'production', warn the user.
+*/
+function isCrushed() {}
+
+if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
+  (0, _warning2.default)('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
+}
+
+exports.createStore = _createStore2.default;
+exports.combineReducers = _combineReducers2.default;
+exports.bindActionCreators = _bindActionCreators2.default;
+exports.applyMiddleware = _applyMiddleware2.default;
+exports.compose = _compose2.default;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+
+/***/ 405:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8517,17 +3707,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _redux = __webpack_require__(38);
+var _redux = __webpack_require__(40);
 
-var _blacklist_reducer = __webpack_require__(348);
+var _blacklist_reducer = __webpack_require__(471);
 
 var _blacklist_reducer2 = _interopRequireDefault(_blacklist_reducer);
 
-var _tabs_reducer = __webpack_require__(349);
+var _tabs_reducer = __webpack_require__(472);
 
 var _tabs_reducer2 = _interopRequireDefault(_tabs_reducer);
 
-var _url_post_reducer = __webpack_require__(350);
+var _url_post_reducer = __webpack_require__(473);
 
 var _url_post_reducer2 = _interopRequireDefault(_url_post_reducer);
 
@@ -8542,16 +3732,83 @@ var rootReducer = (0, _redux.combineReducers)({
 exports.default = rootReducer;
 
 /***/ }),
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */
+
+/***/ 42:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _Symbol = __webpack_require__(65),
+    getRawTag = __webpack_require__(159),
+    objectToString = __webpack_require__(162);
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+    if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+    }
+    return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+}
+
+module.exports = baseGetTag;
+
+/***/ }),
+
+/***/ 43:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return value != null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object';
+}
+
+module.exports = isObjectLike;
+
+/***/ }),
+
+/***/ 471:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8580,7 +3837,8 @@ exports.default = function () {
 var _actions = __webpack_require__(27);
 
 /***/ }),
-/* 349 */
+
+/***/ 472:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8608,7 +3866,8 @@ exports.default = function () {
 var _actions = __webpack_require__(27);
 
 /***/ }),
-/* 350 */
+
+/***/ 473:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8641,30 +3900,22 @@ exports.default = function () {
 var _actions = __webpack_require__(27);
 
 /***/ }),
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */
+
+/***/ 484:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react_chrome_redux___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_redux___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_redux__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_thunk__ = __webpack_require__(254);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_thunk__ = __webpack_require__(311);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_redux_thunk___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_redux_thunk__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__actions__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__background_reducers__ = __webpack_require__(338);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__background_reducers__ = __webpack_require__(405);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__background_reducers___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__background_reducers__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__constants__ = __webpack_require__(130);
 
 
 
@@ -8674,19 +3925,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 console.log('Background.html starting!');
 /*Put page action icon on all tabs*/
 const store = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_redux__["createStore"])(__WEBPACK_IMPORTED_MODULE_4__background_reducers___default.a, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_redux__["applyMiddleware"])(__WEBPACK_IMPORTED_MODULE_2_redux_thunk___default.a)); // a normal Redux store
-__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__["wrapStore"])(store, { portName: __WEBPACK_IMPORTED_MODULE_5__constants__["d" /* STORE_NAME */] }); // make sure portName matches
+__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react_chrome_redux__["wrapStore"])(store, { portName: __WEBPACK_IMPORTED_MODULE_5__constants__["a" /* STORE_NAME */] }); // make sure portName matches
 // read user settings from local storage
 chrome.storage.sync.get(null, object => {
     store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions__["setBlacklist"])(object));
 });
 // update on URL update
 chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
-    if (change && change.status === __WEBPACK_IMPORTED_MODULE_5__constants__["h" /* COMPLETE */]) {
+    if (change && change.status === __WEBPACK_IMPORTED_MODULE_5__constants__["e" /* COMPLETE */]) {
         store.dispatch(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__actions__["setTabURL"])(tabId, tab.url));
         getPosts(tab);
         chrome.tabs.sendMessage(tabId, {
             data: tab,
-            name: __WEBPACK_IMPORTED_MODULE_5__constants__["i" /* URL_UPDATED_EVENT */],
+            name: __WEBPACK_IMPORTED_MODULE_5__constants__["f" /* URL_UPDATED_EVENT */],
         }, null);
     }
 });
@@ -8726,5 +3977,269 @@ function setBadge(text, badgeColor, tab) {
 console.log('Background.html done.');
 
 
+/***/ }),
+
+/***/ 62:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _baseGetTag = __webpack_require__(149);
+
+var _baseGetTag2 = _interopRequireDefault(_baseGetTag);
+
+var _getPrototype = __webpack_require__(151);
+
+var _getPrototype2 = _interopRequireDefault(_getPrototype);
+
+var _isObjectLike = __webpack_require__(156);
+
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** `Object#toString` result references. */
+var objectTag = '[object Object]';
+
+/** Used for built-in method references. */
+var funcProto = Function.prototype,
+    objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Used to infer the `Object` constructor. */
+var objectCtorString = funcToString.call(Object);
+
+/**
+ * Checks if `value` is a plain object, that is, an object created by the
+ * `Object` constructor or one with a `[[Prototype]]` of `null`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.8.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ * }
+ *
+ * _.isPlainObject(new Foo);
+ * // => false
+ *
+ * _.isPlainObject([1, 2, 3]);
+ * // => false
+ *
+ * _.isPlainObject({ 'x': 0, 'y': 0 });
+ * // => true
+ *
+ * _.isPlainObject(Object.create(null));
+ * // => true
+ */
+function isPlainObject(value) {
+  if (!(0, _isObjectLike2.default)(value) || (0, _baseGetTag2.default)(value) != objectTag) {
+    return false;
+  }
+  var proto = (0, _getPrototype2.default)(value);
+  if (proto === null) {
+    return true;
+  }
+  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+  return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+}
+
+exports.default = isPlainObject;
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+/***/ }),
+
+/***/ 65:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var root = __webpack_require__(38);
+
+/** Built-in value references. */
+var _Symbol = root.Symbol;
+
+module.exports = _Symbol;
+
+/***/ }),
+
+/***/ 68:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+var isArray = Array.isArray;
+
+module.exports = isArray;
+
+/***/ }),
+
+/***/ 72:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _root = __webpack_require__(155);
+
+var _root2 = _interopRequireDefault(_root);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/** Built-in value references. */
+var _Symbol = _root2.default.Symbol;
+
+exports.default = _Symbol;
+
+/***/ }),
+
+/***/ 73:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || value !== value && other !== other;
+}
+
+module.exports = eq;
+
+/***/ }),
+
+/***/ 76:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// Message type used for dispatch events
+// from the Proxy Stores to background
+var DISPATCH_TYPE = exports.DISPATCH_TYPE = 'chromex.dispatch';
+
+// Message type for state update events from
+// background to Proxy Stores
+var STATE_TYPE = exports.STATE_TYPE = 'chromex.state';
+
+// Message type for state patch events from
+// background to Proxy Stores
+var PATCH_STATE_TYPE = exports.PATCH_STATE_TYPE = 'chromex.patch_state';
+
+// The `change` value for updated or inserted fields resulting from shallow diff
+var DIFF_STATUS_UPDATED = exports.DIFF_STATUS_UPDATED = 'updated';
+
+// The `change` value for removed fields resulting from shallow diff
+var DIFF_STATUS_REMOVED = exports.DIFF_STATUS_REMOVED = 'removed';
+
 /***/ })
-/******/ ]);
+
+/******/ });
